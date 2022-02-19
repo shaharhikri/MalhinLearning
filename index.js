@@ -6,8 +6,10 @@ const port = process.env.PORT
 const app = express(); // Initialize the express web server
 const filesUploadRouter = require('./src/routes/filesUpload');
 const uuidRouter = require('./src/routes/uuid');
+const composeRouter = require('./src/routes/compose');
 app.use('/upload', filesUploadRouter);
 app.use('/cookies', uuidRouter);
+app.use('/compose', composeRouter);
 
 /**
  * Serve the basic index.html with upload form
