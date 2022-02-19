@@ -1,4 +1,5 @@
-const { Console } = require('console');
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const path = require('path');
 const { spawn } = require('child_process');
@@ -8,7 +9,7 @@ const fs = require('fs-extra');
 
 const router = express.Router();
 
-router.get("/getUserSeed", (req, res) => {
+router.post("/getUserSeed", (req, res) => {
     let cookie = JSON.parse(req.headers.cookie);
     let id = cookie.id;
     let myPath = path.join(uploadPath, id);
@@ -33,7 +34,7 @@ router.get("/getUserSeed", (req, res) => {
             python.on('close', (code) => {
                 console.log(`child process close all stdio with code ${code}`);
                 // send data to browser
-                res.send(dataToSend)
+                res.redirect('/')
             });
         });
     }
