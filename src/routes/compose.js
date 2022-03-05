@@ -9,9 +9,11 @@ const fs = require('fs-extra');
 
 const router = express.Router();
 
-router.post("/getUserSeed", (req, res) => {
-    let cookie = JSON.parse(req.headers.cookie);
-    let id = cookie.id;
+var bodyParser = require('body-parser')
+var jsonParser = bodyParser.json()
+
+router.post("/getUserSeed/:id", jsonParser, (req, res) => {
+    let id = req.params.id;
     let myPath = path.join(uploadPath, id);
     if (!fs.existsSync(myPath))
         res.json({});

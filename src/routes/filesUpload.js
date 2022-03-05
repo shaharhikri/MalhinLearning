@@ -10,24 +10,21 @@ const fileType = process.env.ALLOWED_TYPE;
 const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'));
 fs.ensureDir(uploadPath); // Make sure that he upload path exits
 
-
 const router = express.Router();
 
-/**
- * Create route /upload which handles the post request
- */
+
 router.use(busboy({
     highWaterMark: 2 * 1024 * 1024, // Set 2MiB buffer
 })); // Insert the busboy middle-ware
 
-router.post("/", (req, res, next) => {
+router.post("/:id", (req, res, next) => {
     if (req === undefined)
         return;
 
-    //get id from cookies, and if isnwt exists - make dir.
-    let cookie = JSON.parse(req.headers.cookie);
-    let id = cookie.id;
+    let id = req.params.id //req.body.id + ''
     let myPath = path.join(uploadPath,id);
+    console.log(id)
+    console.log('uploaf '+myPath)
     
     if(!fs.existsSync(myPath))
         fs.mkdirSync(myPath);
@@ -40,24 +37,6 @@ router.post("/", (req, res, next) => {
 
     res.redirect('back');
 
-});
-
-
-router.get("/getFilenames", (req, res, next) => {
-    let cookie = JSON.parse(req.headers.cookie);
-    let id = cookie.id;
-    let myPath = path.join(uploadPath,id);
-    
-    if(!fs.existsSync(myPath))
-        res.json({});
-    else{
-        fs.readdir(myPath, (err, result)=>{
-            if(err){
-                res.json({status: 'Error in read files from user(id) dir.'});
-            }
-            res.json(result);
-        });
-    }
 });
 
 module.exports = router;

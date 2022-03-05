@@ -5,17 +5,21 @@ const port = process.env.PORT
 
 const app = express(); // Initialize the express web server
 const filesUploadRouter = require('./src/routes/filesUpload');
-const uuidRouter = require('./src/routes/uuid');
 const composeRouter = require('./src/routes/compose');
+const userAuth = require('./src/routes/userAuth')[0];
+const checkAuthenticated = require('./src/routes/userAuth')[1];
+const showFilesRouter = require('./src/routes/showFiles');
+app.set('view-engine', 'ejs')
 app.use('/upload', filesUploadRouter);
-app.use('/cookies', uuidRouter);
 app.use('/compose', composeRouter);
+app.use('/getFilenames', showFilesRouter);
+app.use(userAuth);
 
 /**
- * Serve the basic index.html with upload form
+ * Serve the basic index.ejs with upload form
  */
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + '/src/static/index.html');
+app.get("/", checkAuthenticated, (req, res) => {
+    res.render(__dirname + '/src/static/index.ejs' , { name: req.user.name, userid: req.user.id });
 });
 
 app.get("/script", (req, res) => {
