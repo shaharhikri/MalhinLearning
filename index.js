@@ -29,3 +29,12 @@ app.get("/script", (req, res) => {
 const server = app.listen(port, function () {
     console.log(`Listening on port ${server.address().port}`);
 });
+
+// const ravendb = require('./src/dbUtils/common');
+// async function a(){
+//     var user = await ravendb.findUserById('Users/78940003cd027b4c0485ee1e9b953421')
+//     console.log('USERRRR ',user)    
+//     var user2 = await ravendb.findUserById('Users/78940003cd027b4c0485ee1e9b953422')
+//     console.log('USERRRR2 ',user2) 
+// }
+// a();

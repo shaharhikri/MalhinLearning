@@ -12,9 +12,10 @@ const router = express.Router();
 var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 
-router.post("/getUserSeed/:id", jsonParser, (req, res) => {
-    let id = req.params.id;
-    let myPath = path.join(uploadPath, id);
+router.post("/getUserSeed/Users/:idsuffix", jsonParser, (req, res) => {
+    let idsuffix = req.params.idsuffix
+    //let id = 'Users/'+req.params.idsuffix;
+    let myPath = path.join(uploadPath, idsuffix);
     if (!fs.existsSync(myPath))
         res.json({});
     else {

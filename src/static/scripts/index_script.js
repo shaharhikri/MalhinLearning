@@ -1,7 +1,3 @@
-console.log('Cookies(UUID):', document.cookie);
-console.log('ID:', myid);
-console.log(`{ \"id\" : \"${myid}\" }`)
-
 const data = { id: myid };
 
 function getFileNamesPromise() {

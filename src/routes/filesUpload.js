@@ -17,15 +17,12 @@ router.use(busboy({
     highWaterMark: 2 * 1024 * 1024, // Set 2MiB buffer
 })); // Insert the busboy middle-ware
 
-router.post("/:id", (req, res, next) => {
+router.post("/Users/:idsuffix", (req, res, next) => {
     if (req === undefined)
         return;
 
-    let id = req.params.id //req.body.id + ''
-    let myPath = path.join(uploadPath,id);
-    console.log(id)
-    console.log('uploaf '+myPath)
-    
+    let idsuffix = req.params.idsuffix
+    let myPath = path.join(uploadPath,idsuffix);
     if(!fs.existsSync(myPath))
         fs.mkdirSync(myPath);
 
@@ -34,7 +31,6 @@ router.post("/:id", (req, res, next) => {
     req.busboy.on('file', (fieldname, file, filename, x,  mimeType) => {
         uploadFile(file, filename, mimeType,fileType, myPath);
     });
-
     res.redirect('back');
 
 });

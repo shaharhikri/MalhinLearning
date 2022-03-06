@@ -15,12 +15,11 @@ var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 
 router.post("/", jsonParser, (req, res, next) => {
-    console.log('getFilenames')
     let id = req.body.id
+    let idsuffix = id.split("/")[1];
 
-    let myPath = path.join(uploadPath,id);
-    console.log('PATH '+myPath)
-    
+    let myPath = path.join(uploadPath,idsuffix);
+
     if(!fs.existsSync(myPath))
         res.json({});
     else{

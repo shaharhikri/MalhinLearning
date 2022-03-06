@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 function initialize(passport, getUserByEmail, getUserById){
     const uathenticateUser = async (email, password, done) => {
-        const user = getUserByEmail(email)
+        const user = await getUserByEmail(email)
         if (user == null ){
             return done(null, false, { message: 'No user with that email'})
         }
@@ -23,9 +23,10 @@ function initialize(passport, getUserByEmail, getUserById){
     passport.use(new LocaStrategy({ usernameField: 'email'}, uathenticateUser))
 
     passport.serializeUser((user, done) => done(null, user.id))
-    passport.deserializeUser((id, done) => {
-      return done(null, getUserById(id))
-    })
+    passport.deserializeUser(async (id, done) => {
+        const user = await getUserById(id);
+        done(null, user);
+    });
 }
 
 module.exports = initialize

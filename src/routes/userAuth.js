@@ -10,20 +10,16 @@ const session = require('express-session')
 const path = require('path');
 
 const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'));
-const genUUID = require(path.join(__dirname, '../services/uuidGenService'));
+const genUUID = require(path.join(__dirname, '../services/uuidFactory'));
+const ravendb = require(path.join(__dirname, '../dbUtils/common'));
+const { User } = require('../dbUtils/modelClasses');
 
 const initializePassport = require(path.join(__dirname, '../services/passport-config'));
 initializePassport(
     passport,
-    email => users.find(user => user.email === email),
-    id => users.find(user => user.id === id)
+    ravendb.findUserByEmail,
+    ravendb.findUserById
 )
-
-const users = [{id:"0fd7a20890532b194be72a3f9a28ba2f",
-                name:"Shahar Hikri",
-                email:"shaharhikri@gmail.com",
-                salt:"$2b$10$2kb1THQ8vKthKvjcsZRfje",
-                hashedpassword:"z5j2TuaCuYd13QiU.2tp2EBxq1HsDXm"}]
 
 router.use(express.urlencoded({ extended: false }))
 router.use(flash())
@@ -57,17 +53,18 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
     try {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
-        const user = { 
-            id: genUUID(uploadPath),
-            name: req.body.name, 
-            email: req.body.email, 
-            salt: salt, 
-            hashedpassword: hashedPassword.substring(29), 
-        };
-        users.push(user);
-        console.log(JSON.stringify(user)+'\n'+hashedPassword)
+        const user = new User (
+            await genUUID(uploadPath),
+            req.body.name, 
+            req.body.email, 
+            salt, 
+            hashedPassword.substring(29), 
+        );
+
+        ravendb.storeUser(user);
+
         res.redirect('/login');
-    } catch {
+    } catch (e){
         res.redirect('/register');
     }
 });
@@ -87,12 +84,7 @@ function checkAuthenticated(req, res, next) {
 }
 
 function checkNotAuthenticated(req, res, next) {
-    // if cookie exist - login by that
-
-    //elif
-    if (req.isAuthenticated()) {
-        // if cookie doen't exist - create it.
-        
+    if (req.isAuthenticated()) {      
         return res.redirect('/')
     }
     next()
