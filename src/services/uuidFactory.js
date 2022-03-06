@@ -6,10 +6,8 @@ const { User } = require('../dbUtils/modelClasses');
 
 async function genUuid(uploadPath){
     let uuid = uuidGen.randomBytes(16).toString('hex');
-    let p = path.join(uploadPath,uuid); //uploadPath+'/'+uuid+'/'
-    // while(fs.existsSync(p)){
-    //     uuid = uuidGen.randomBytes(16).toString('hex');
-    // }
+    let p = path.join(uploadPath,uuid);
+
     let user = await ravendb.findUserById('Users/'+uuid);
     while(user!=null){
         uuid = uuidGen.randomBytes(16).toString('hex');
