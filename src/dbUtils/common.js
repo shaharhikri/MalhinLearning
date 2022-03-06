@@ -3,21 +3,39 @@ const documentStore = require(path.join(__dirname, './documentStore'));
 const { User } = require('../dbUtils/modelClasses');
 
 function storeUser(userEntity){
-    session = documentStore.openSession();
-    session.store(userEntity, 'Users/'+userEntity.id);
-    session.saveChanges();
+    try{
+        session = documentStore.openSession();
+        session.store(userEntity, 'Users/'+userEntity.id);
+        session.saveChanges();
+    }
+    catch (e){
+        console.log('common::storeUser - RavenException');
+    }
+
 }
 
 async function findUserById(id){
-    session = documentStore.openSession();
-    var user = await session.session.load(id); 
-    return user;
+    try{
+        session = documentStore.openSession();
+        var user = await session.session.load(id); 
+        return user;
+    }
+    catch (e){
+        console.log('common::findUserById - RavenException');
+        return null;
+    }
 }
 
 async function findUserByEmail(email){
-    session = documentStore.openSession();
-    var users = await session.query(User).whereEquals('email', email).all(); 
-    return users[0];
+    try{
+        session = documentStore.openSession();
+        var users = await session.query(User).whereEquals('email', email).all(); 
+        return users[0];
+    }
+    catch (e){
+        console.log('common::findUserByEmail - RavenException');
+        return null;
+    }
 }
 
 module.exports.storeUser = storeUser;
