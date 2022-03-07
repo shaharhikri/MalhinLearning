@@ -30,4 +30,31 @@ getFileNamesPromise().then((namesArr) => {
     }
 });
 
-let composeBtn = document.getElementById('fileList');
+
+let filesChoice = document.getElementById('filesChoice');
+
+async function uploadFile() {
+    let formData = new FormData();  
+    formData.append("field", myid);
+    if(filesChoice.files.length > 0){
+        formData.append("file", filesChoice.files[0]);
+    }
+    await fetch('/upload/', {
+      method: "POST", 
+      body: formData
+    });    
+    alert('The file has been uploaded successfully.');
+}
+
+async function compose(){
+    await fetch('/compose/', {
+        method: "POST", 
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });    
+      alert('Composed successfully.');
+
+      //TODO: Multiple files instead of 1
+}

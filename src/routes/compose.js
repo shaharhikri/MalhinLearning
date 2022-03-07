@@ -6,16 +6,17 @@ const { spawn } = require('child_process');
 const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'));
 const programPath = process.env.SCRIPT_PATH
 const fs = require('fs-extra');
+const bodyParser = require('body-parser')
+const jsonParser = bodyParser.json()
 
 const router = express.Router();
 
-var bodyParser = require('body-parser')
-var jsonParser = bodyParser.json()
-
-router.post("/getUserSeed/Users/:idsuffix", jsonParser, (req, res) => {
-    let idsuffix = req.params.idsuffix
+router.post("/", jsonParser, (req, res) => {
+    let id = req.body.id
+    let idsuffix = id.split("/")[1];
     //let id = 'Users/'+req.params.idsuffix;
     let myPath = path.join(uploadPath, idsuffix);
+    console.log(myPath)
     if (!fs.existsSync(myPath))
         res.json({});
     else {

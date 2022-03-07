@@ -5,17 +5,22 @@
 
 <body>
     <h1>File Upload:</h1>
-    <form method="POST" action="/upload/<%= userid%>" enctype="multipart/form-data">
-        <input type="file" name="fileToUpload" multiple />
-        <input type="submit" value="upload" />
-    </form>
 
-    <form method="POST" action="/compose/getUserSeed/<%= userid%>" enctype="multipart/form-data">
+    <input id='filesChoice' type="file" name="fileToUpload" multiple />
+    <button type="button" onclick="uploadFile()">upload</button>
+
+    <!-- <form method="POST" action="/compose/getUserSeed/<%= userid%>" enctype="multipart/form-data">
         <input type="submit" value="compose" />
-    </form>
+    </form> -->
+
+    <button type="button" onclick="compose()">compose</button>
 
     <h1>My Files:</h1>
     <ul id=fileList></ul>
+
+    <form method="POST" action="/logout" enctype="multipart/form-data">
+        <input type="submit" value="logout" />
+    </form>
 </body>
 
 <script>
