@@ -1,16 +1,35 @@
 <h1>Login</h1>
-<% if (messages.error) { %>
-<%= messages.error %>
-<% } %>
-<form action="/login" method="POST">
-    <div>
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
-    </div>
-    <div>
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-    </div>
+
+<body>
+    <label for="email">Email</label>
+    <input type="email" id="emailInput" name="email" required>
+    <label for="password">Password</label>
+    <input type="password" id="passwordInput" name="password" required>
     <button type="submit">Login</button>
-</form>
-<a href="/register">Register</a>
+    <a href="/register">Register</a>
+</body>
+
+<script>
+    //--------------------Coockies------------------------
+    async function cookieFromServer() {
+        let formData = new FormData();  
+        let emailInput = document.getElementById('emailInput');
+        let passwordInput = document.getElementById('passwordInput');
+        await fetch('/upload/', {
+            method: "POST", 
+            body: formData
+        }).then((response) => {
+            return response.json();
+        }).then((jsonObject) => {
+            let d = new Date();
+            d.setTime(d.getTime() + (31 * 24 * 60 * 60 * 1000)); //31 dayes
+            let expDate = d.toGMTString();
+            document.cookie = JSON.stringify(jsonObject) + "; expires=" + expDate + ";path=/";
+        });
+        return p;   
+    }
+
+    if (document.cookie === undefined || document.cookie === '') {
+        cookieFromServer();
+    } 
+</script>
