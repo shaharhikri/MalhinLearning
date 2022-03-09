@@ -5,20 +5,23 @@
     <input type="email" id="emailInput" name="email" required>
     <label for="password">Password</label>
     <input type="password" id="passwordInput" name="password" required>
-    <button type="submit">Login</button>
+    <button type="button" onclick="login()">Login</button>
     <a href="/register">Register</a>
 </body>
 
 <script>
-    //--------------------Coockies------------------------
-    async function cookieFromServer() {
-        let formData = new FormData();  
+    async function login() { 
         let emailInput = document.getElementById('emailInput');
         let passwordInput = document.getElementById('passwordInput');
-        await fetch('/upload/', {
+        let data = { email: emailInput.value, password: passwordInput.value}
+        return await fetch('/login', {
             method: "POST", 
-            body: formData
-        }).then((response) => {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then((response) => {
             return response.json();
         }).then((jsonObject) => {
             let d = new Date();
@@ -26,10 +29,20 @@
             let expDate = d.toGMTString();
             document.cookie = JSON.stringify(jsonObject) + "; expires=" + expDate + ";path=/";
         });
-        return p;   
     }
 
-    if (document.cookie === undefined || document.cookie === '') {
-        cookieFromServer();
-    } 
+    // if (document.cookie && document.cookie!==''){
+    //     cookieData = JSON.parse(document.cookie)
+    //     if ( cookieData.token ){
+    //         let myToken = cookieData.token;
+    //         // fetch('http://www.google.com/', {
+    //         //     method: "GET"
+    //         // });
+    //         console.log('token inited')
+    //     }
+    // }
+
+    console.log('COOKIES: ',document.cookie)
+
+
 </script>

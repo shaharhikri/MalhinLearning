@@ -5,6 +5,7 @@ const express = require('express')
 const router = express.Router();
 const bcrypt = require('bcrypt')
 const path = require('path');
+const cookieParser = require("cookie-parser");
 
 const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'));
 const genUUID = require(path.join(__dirname, '../services/uuidFactory'));
@@ -13,7 +14,9 @@ const { User } = require('../dbUtils/modelClasses');
 
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
-router.use(bodyParser.urlencoded({ extended: false }))
+router.use(bodyParser.json())
+// router.use(bodyParser.urlencoded({ extended: false }))
+router.use(cookieParser());
 
 const passport = require('passport')
 const passportJWT = require("passport-jwt");
@@ -25,7 +28,6 @@ passport.use(new JWTStrategy({
     secretOrKey: process.env.ACCESS_TOKEN_SECRET
 },
     async function (userId, done) {
-        console.log("jwtPayload:", userId)
         return ravendb.findUserById(userId)
             .then(user => { return done(null, user); })
             .catch(err => { return done(err); });
@@ -35,51 +37,45 @@ router.get('/login', notValidateToken, (req, res) => {
     res.render(path.join(__dirname, '../static/login.ejs'))
 })
 
-router.get('/register', (req, res) => {
+router.get('/register', notValidateToken, (req, res) => {
     res.render(path.join(__dirname, '../static/register.ejs'))
 })
 
 
 router.post('/login', async (req, res) => {
-    const user = await ravendb.findUserByEmail(req.body.email);
     try {
-        console.log(req.body.password, user.salt, user.hashedpassword)
-        if (await bcrypt.compare(req.body.password, user.salt + user.hashedpassword)) {
+        const foundUser = await ravendb.findUserByEmail(req.body.email);
+        console.log('post /login foundUser ',foundUser)
+        if (await bcrypt.compare(req.body.password, foundUser.salt + foundUser.hashedpassword)) {
 
-            //return token
-            const userId = { userid: user.id }
-
-            const token = genToken(user);
-            res.status(200).json({ token : token })
-
-            //redirect
-            res.redirect('/');
-            console.log('logged in')
+            //logged in succeeded
+            let token = genToken(foundUser);
+            //res.cookie('token', token ,{maxAge:99999999999, httpOnly: true, secure: false, overwrite: true}).send('cookie set');
+            res.status(200).json({ token : token });
+            console.log('post /login logged in succeeded')
         }
         else {
             res.redirect('back');
-            console.log('log in failed')
+            console.log('post /login logged in failed')
         }
     }
     catch (e) {
         console.log(e)
         res.redirect('back');
+        console.log('post /login logged in failed')
     }
 
 })
 
 router.post('/register', async (req, res) => {
     //Check If User Exists
-    console.log('register post ',req.body)
     let foundUser = await ravendb.findUserByEmail(req.body.email);
-    console.log(foundUser);
 
     if (foundUser) {
         return res.status(403).json({ error: 'Email is already in use' });
     }
 
     const salt = await bcrypt.genSalt();
-    console.log('line 80 ',salt,req.body.password, req.body)
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     const newUser = new User(
         await genUUID(uploadPath),
@@ -92,51 +88,57 @@ router.post('/register', async (req, res) => {
 
     // Generate JWT token
     const token = genToken(newUser);
-    res.status(200).json({ token : token }) //TODO: remove token
+    res.redirect('/login'); //TODO: remove token
 });
-
-router.get('/secret', validateToken, (req, res,) => {
-    res.json("Secret Data " + req.decriptedToken)
-})
 
 function genToken(user) {
     return jwt.sign(user.id, process.env.ACCESS_TOKEN_SECRET)  //, { expiresIn: 300})
 }
 
 function validateToken(req, res, next) {
-    let cookie = JSON.parse(req.headers.cookie);
-    console.log('cookies: ', cookie)
-    let token = cookie.token;
+    if ( !req.headers.cookie ){
+        res.redirect('/login');
+        return;
+    }
+    const tokenObj = JSON.parse(req.headers.cookie);
+    if ( !tokenObj.token ){
+        res.redirect('/login');
+        return;
+    }
+    const token = tokenObj.token;
 
-    // const authHeader = req.headers['authorization']
-    // const token = authHeader && authHeader.split(' ')[1]
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decriptedToken) => {
-        console.log('decriptedToken: ', decriptedToken)
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
         if (err || !decriptedToken) {
             res.redirect('/login');
             return;
         }
-        req.decriptedToken = decriptedToken
-        console.log(decriptedToken)
+        let userId = decriptedToken;
+        req.user = await ravendb.findUserById(userId);
         next()
     });
 }
 
+//login using this
 function notValidateToken(req, res, next) {
-    let cookie = JSON.parse(req.headers.cookie);
-    console.log('cookies: ', cookie)
-    let token = cookie.token;
+    if ( !req.headers.cookie ){
+        next()
+        return;
+    }
+    const tokenObj = JSON.parse(req.headers.cookie);
+    if ( !tokenObj.token ){
+        next()
+        return;
+    }
+    const token = tokenObj.token;
     
-    // const authHeader = req.headers['authorization']
-    // const token = authHeader && authHeader.split(' ')[1]
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decriptedToken) => {
-        console.log('decriptedToken: ', decriptedToken)
+    
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
         if (err || !decriptedToken) {
             next()
             return;
         }
-        req.decriptedToken = decriptedToken
-        console.log(decriptedToken)
+        let userId = decriptedToken;
+        req.user = await ravendb.findUserById(userId);
         res.redirect('/');
     });
 }
