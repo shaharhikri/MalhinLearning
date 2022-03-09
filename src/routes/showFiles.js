@@ -16,7 +16,6 @@ const router = express.Router();
 router.post("/", jsonParser, (req, res, next) => {
     let id = req.body.id
     let idsuffix = id.split("/")[1];
-
     let myPath = path.join(uploadPath,idsuffix);
 
     if(!fs.existsSync(myPath))

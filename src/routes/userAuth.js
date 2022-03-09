@@ -10,7 +10,10 @@ const parseToken = require(path.join(__dirname, '../services/tokenParser'));
 
 const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'));
 const genUUID = require(path.join(__dirname, '../services/uuidFactory'));
-const ravendb = require(path.join(__dirname, '../dbUtils/common'));
+let ravendb = require(path.join(__dirname, '../dbUtils/common'));
+if (process.env.RUNMODE === 'TEST'){
+    ravendb = require(path.join(__dirname, '../dbUtils/commonMockup'));
+}
 const { User } = require('../dbUtils/modelClasses');
 
 const jwt = require('jsonwebtoken')
@@ -19,11 +22,11 @@ router.use(bodyParser.json())
 router.use(cookieParser());
 
 router.get('/login', notValidateToken, (req, res) => {
-    res.render(path.join(__dirname, '../static/login.ejs'))
+    res.render('login')
 })
 
 router.get('/register', notValidateToken, (req, res) => {
-    res.render(path.join(__dirname, '../static/register.ejs'))
+    res.render('register')
 })
 
 router.post('/login', async (req, res) => {
@@ -56,7 +59,7 @@ router.post('/register', async (req, res) => {
     //Check If User Exists
     let foundUser = await ravendb.findUserByEmail(req.body.email);
     if (foundUser) {
-        return res.status(403).json({ error: 'Email is already in use' });
+        return res.status(200).json({ error: 'Email is already in use' });
     }
 
     const salt = await bcrypt.genSalt();
@@ -69,10 +72,7 @@ router.post('/register', async (req, res) => {
         hashedPassword.substring(29),
     );
     await ravendb.storeUser(newUser);
-
-    // Generate JWT token
-    const token = genToken(newUser);
-    res.redirect('/login'); //TODO: remove token
+    return res.status(200).json({ succeeded: 'succeeded' });
 });
 
 function genToken(user) {
@@ -93,6 +93,10 @@ function validateToken(req, res, next) {
         }
         let userId = decriptedToken;
         req.user = await ravendb.findUserById(userId);
+        if (!req.user) {
+            res.redirect('/login');
+            return;
+        }
         next()
     });
 }
@@ -113,6 +117,10 @@ function notValidateToken(req, res, next) {
         }
         let userId = decriptedToken;
         req.user = await ravendb.findUserById(userId);
+        if (!req.user) {
+            next()
+            return;
+        }
         res.redirect('/');
     });
 }
