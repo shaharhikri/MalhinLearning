@@ -19,20 +19,20 @@ router.use(bodyParser.json())
 // router.use(bodyParser.urlencoded({ extended: false }))
 router.use(cookieParser());
 
-const passport = require('passport')
-const passportJWT = require("passport-jwt");
-const JWTStrategy = passportJWT.Strategy;
-const ExtractJWT = passportJWT.ExtractJwt;
+// const passport = require('passport')
+// const passportJWT = require("passport-jwt");
+// const JWTStrategy = passportJWT.Strategy;
+// const ExtractJWT = passportJWT.ExtractJwt;
 
-passport.use(new JWTStrategy({
-    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.ACCESS_TOKEN_SECRET
-},
-    async function (userId, done) {
-        return ravendb.findUserById(userId)
-            .then(user => { return done(null, user); })
-            .catch(err => { return done(err); });
-    }))
+// passport.use(new JWTStrategy({
+//     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+//     secretOrKey: process.env.ACCESS_TOKEN_SECRET
+// },
+//     async function (userId, done) {
+//         return ravendb.findUserById(userId)
+//             .then(user => { return done(null, user); })
+//             .catch(err => { return done(err); });
+//     }))
 
 router.get('/login', notValidateToken, (req, res) => {
     res.render(path.join(__dirname, '../static/login.ejs'))
