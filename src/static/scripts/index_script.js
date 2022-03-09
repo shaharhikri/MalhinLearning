@@ -58,3 +58,21 @@ async function compose(){
 
       //TODO: Multiple files instead of 1
 }
+
+async function logout(){
+    delCookie();
+    location.replace('/login');
+}
+
+function delCookie()
+{
+    var new_date = new Date()
+    new_date = new_date.toGMTString()
+    var thecookie = document.cookie.split(";")
+    for (var i = 0;i < thecookie.length;i++)
+    {
+        document.cookie = thecookie[i] + "; expires ="+ new_date
+    }
+}
+
+console.log('COOKIES: ',document.cookie)

@@ -6,6 +6,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt')
 const path = require('path');
 const cookieParser = require("cookie-parser");
+const parseToken = require(path.join(__dirname, '../services/tokenParser'));
 
 const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'));
 const genUUID = require(path.join(__dirname, '../services/uuidFactory'));
@@ -96,16 +97,11 @@ function genToken(user) {
 }
 
 function validateToken(req, res, next) {
-    if ( !req.headers.cookie ){
+    const token = parseToken(req);
+    if(!token){
         res.redirect('/login');
         return;
     }
-    const tokenObj = JSON.parse(req.headers.cookie);
-    if ( !tokenObj.token ){
-        res.redirect('/login');
-        return;
-    }
-    const token = tokenObj.token;
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
         if (err || !decriptedToken) {
@@ -120,17 +116,12 @@ function validateToken(req, res, next) {
 
 //login using this
 function notValidateToken(req, res, next) {
-    if ( !req.headers.cookie ){
+
+    const token = parseToken(req);
+    if(!token){
         next()
         return;
     }
-    const tokenObj = JSON.parse(req.headers.cookie);
-    if ( !tokenObj.token ){
-        next()
-        return;
-    }
-    const token = tokenObj.token;
-    
     
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
         if (err || !decriptedToken) {
