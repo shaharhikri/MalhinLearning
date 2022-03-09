@@ -11,6 +11,7 @@ const jsonParser = bodyParser.json()
 
 const router = express.Router();
 
+//TODO: add token veification
 router.post("/", jsonParser, (req, res) => {
     let id = req.body.id
     let idsuffix = id.split("/")[1];

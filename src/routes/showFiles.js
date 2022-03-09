@@ -14,6 +14,7 @@ fs.ensureDir(uploadPath); // Make sure that he upload path exits
 const router = express.Router();
 
 router.post("/", jsonParser, (req, res, next) => {
+    //TODO: add token veification
     let id = req.body.id
     let idsuffix = id.split("/")[1];
     let myPath = path.join(uploadPath,idsuffix);

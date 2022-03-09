@@ -18,7 +18,7 @@ router.use(busboy({
 })); // Insert the busboy middle-ware
 
 router.post("/", (req, res) => {
-    
+    //TODO: add token veification
     if (req === undefined)
         return;
 
