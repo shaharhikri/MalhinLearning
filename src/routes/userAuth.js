@@ -16,23 +16,7 @@ const { User } = require('../dbUtils/modelClasses');
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
 router.use(bodyParser.json())
-// router.use(bodyParser.urlencoded({ extended: false }))
 router.use(cookieParser());
-
-// const passport = require('passport')
-// const passportJWT = require("passport-jwt");
-// const JWTStrategy = passportJWT.Strategy;
-// const ExtractJWT = passportJWT.ExtractJwt;
-
-// passport.use(new JWTStrategy({
-//     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-//     secretOrKey: process.env.ACCESS_TOKEN_SECRET
-// },
-//     async function (userId, done) {
-//         return ravendb.findUserById(userId)
-//             .then(user => { return done(null, user); })
-//             .catch(err => { return done(err); });
-//     }))
 
 router.get('/login', notValidateToken, (req, res) => {
     res.render(path.join(__dirname, '../static/login.ejs'))
@@ -42,27 +26,27 @@ router.get('/register', notValidateToken, (req, res) => {
     res.render(path.join(__dirname, '../static/register.ejs'))
 })
 
-
 router.post('/login', async (req, res) => {
     try {
         const foundUser = await ravendb.findUserByEmail(req.body.email);
         console.log('post /login foundUser ',foundUser)
-        if (await bcrypt.compare(req.body.password, foundUser.salt + foundUser.hashedpassword)) {
-
+        if( !foundUser ){
+            res.status(200).json({ error : 'There\'s no such user' });
+            console.log('post /login logged in failed')
+        }
+        else if (await bcrypt.compare(req.body.password, foundUser.salt + foundUser.hashedpassword)) {
             //logged in succeeded
             let token = genToken(foundUser);
-            //res.cookie('token', token ,{maxAge:99999999999, httpOnly: true, secure: false, overwrite: true}).send('cookie set');
             res.status(200).json({ token : token });
             console.log('post /login logged in succeeded')
         }
         else {
-            res.redirect('back');
+            res.status(200).json({ error : 'Password incorrect' });
             console.log('post /login logged in failed')
         }
     }
     catch (e) {
         console.log(e)
-        res.redirect('back');
         console.log('post /login logged in failed')
     }
 
@@ -71,7 +55,6 @@ router.post('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
     //Check If User Exists
     let foundUser = await ravendb.findUserByEmail(req.body.email);
-
     if (foundUser) {
         return res.status(403).json({ error: 'Email is already in use' });
     }
@@ -133,9 +116,5 @@ function notValidateToken(req, res, next) {
         res.redirect('/');
     });
 }
-
-
-router.use(express.urlencoded({ extended: false }))
-
 
 module.exports = [ router, validateToken ];
