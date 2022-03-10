@@ -6,7 +6,6 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const path = require('path');
 const cookieParser = require("cookie-parser");
-const parseToken = require(path.join(__dirname, '../services/tokenParser'));
 
 const genUUID = require(path.join(__dirname, '../services/uuidFactory'))
 let ravendb = require(path.join(__dirname, '../dbUtils/common'));
@@ -14,17 +13,17 @@ if (process.env.RUNMODE === 'TEST'){
     ravendb = require(path.join(__dirname, '../dbUtils/commonMockup'));
 }
 const { User } = require('../dbUtils/modelClasses');
+const { genToken, tokenSignAuthenticationMiddleware } = require('../services/userSignAuthentication');
 
-const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
 router.use(bodyParser.json())
 router.use(cookieParser());
 
-router.get('/login', notValidateToken, (req, res) => {
+router.get('/login', tokenSignAuthenticationMiddleware, (req, res) => {
     res.render('login')
 })
 
-router.get('/register', notValidateToken, (req, res) => {
+router.get('/register', tokenSignAuthenticationMiddleware, (req, res) => {
     res.render('register')
 })
 
@@ -74,57 +73,4 @@ router.post('/register', async (req, res) => {
     return res.status(200).json({ succeeded: 'succeeded' });
 });
 
-function genToken(user) {
-    return jwt.sign(user.id, process.env.ACCESS_TOKEN_SECRET)  //, { expiresIn: 300})
-}
-
-//main page using this
-function validateToken(req, res, next) {
-    const token = parseToken(req);
-    if(!token){
-        res.redirect('/login');
-        return;
-    }
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
-        if (err || !decriptedToken) {
-            res.redirect('/login');
-            return;
-        }
-        let userId = decriptedToken;
-        console.log('validateToken',userId)
-        req.user = await ravendb.findUserById(userId);
-        if (!req.user) {
-            res.redirect('/login');
-            return;
-        }
-        next()
-    });
-}
-
-//login/register using this
-function notValidateToken(req, res, next) {
-
-    const token = parseToken(req);
-    if(!token){
-        next()
-        return;
-    }
-    
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
-        if (err || !decriptedToken) {
-            next()
-            return;
-        }
-        let userId = decriptedToken;
-        console.log('notValidateToken',userId)
-        req.user = await ravendb.findUserById(userId);
-        if (!req.user) {
-            next()
-            return;
-        }
-        res.redirect('/');
-    });
-}
-
-module.exports = { userAuth: router, checkAuthenticated: validateToken };
+module.exports = router;

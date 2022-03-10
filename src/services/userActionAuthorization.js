@@ -40,4 +40,4 @@ function isAuthorized(token, userIdForAction, ifAuthorized, ifForbidden) {
     });
 }
 
-module.exports = { vaildateTokenMiddleware: tokenActionAuthorizationMiddleware, vaildateToken: isAuthorized }
+module.exports = { tokenActionAuthorizationMiddleware: tokenActionAuthorizationMiddleware, vaildateToken: isAuthorized }
