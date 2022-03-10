@@ -7,12 +7,12 @@ const fs = require('fs-extra');
 const bodyParser = require('body-parser')
 const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'));
 fs.ensureDir(uploadPath); // Make sure that he upload path exits
-const userActionAuthorization = require(path.join(__dirname, '../services/userActionAuthorization'));
+const { vaildateTokenMiddleware } = require(path.join(__dirname, '../services/userActionAuthorization'));
 
 const router = express.Router();
 router.use(bodyParser.json())
 
-router.post("/", userActionAuthorization, (req, res) => {
+router.post("/", vaildateTokenMiddleware, (req, res) => {
     let id = req.body.id
     let idsuffix = id.split("/")[1];
     let myPath = path.join(uploadPath,idsuffix);
