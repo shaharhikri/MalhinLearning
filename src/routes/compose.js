@@ -7,14 +7,15 @@ const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'
 const programPath = process.env.SCRIPT_PATH
 const fs = require('fs-extra');
 const bodyParser = require('body-parser')
-const jsonParser = bodyParser.json()
+const { vaildateTokenMiddleware } = require(path.join(__dirname, '../services/userActionAuthorization'));
 
 const router = express.Router();
+router.use(bodyParser.json())
 
-router.post("/", jsonParser, (req, res) => {
+router.post("/", vaildateTokenMiddleware, (req, res) => {
     let id = req.body.id
     let idsuffix = id.split("/")[1];
-    //let id = 'Users/'+req.params.idsuffix;
+
     let myPath = path.join(uploadPath, idsuffix);
     console.log(myPath)
     if (!fs.existsSync(myPath))

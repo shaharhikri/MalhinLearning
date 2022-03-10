@@ -1,12 +1,12 @@
 const uuidGen = require('crypto');
-const fs = require('fs-extra');
 const path = require('path');
-const ravendb = require(path.join(__dirname, '../dbUtils/common'));
-const { User } = require('../dbUtils/modelClasses');
+let ravendb = require(path.join(__dirname, '../dbUtils/common'));
+if (process.env.RUNMODE === 'TEST'){
+    ravendb = require(path.join(__dirname, '../dbUtils/commonMockup'));
+}
 
-async function genUuid(uploadPath){
+async function genUuid(){
     let uuid = uuidGen.randomBytes(16).toString('hex');
-    let p = path.join(uploadPath,uuid);
 
     let user = await ravendb.findUserById('Users/'+uuid);
     while(user!=null){
