@@ -1,9 +1,6 @@
 const uuidGen = require('crypto');
 const path = require('path');
 let ravendb = require(path.join(__dirname, '../dbUtils/common'));
-if (process.env.RUNMODE === 'TEST'){
-    ravendb = require(path.join(__dirname, '../dbUtils/commonMockup'));
-}
 
 async function genUuid(){
     let uuid = uuidGen.randomBytes(16).toString('hex');

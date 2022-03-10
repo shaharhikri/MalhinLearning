@@ -1,6 +1,6 @@
 const path = require('path');
 const documentStore = require(path.join(__dirname, './documentStore'));
-const { User } = require('../dbUtils/modelClasses');
+const { User } = require('./modelClasses');
 
 function storeUser(userEntity){
     try{
@@ -38,6 +38,11 @@ async function findUserByEmail(email){
     }
 }
 
-module.exports.storeUser = storeUser;
-module.exports.findUserById = findUserById;
-module.exports.findUserByEmail = findUserByEmail;
+if (process.env.RUNMODE === 'TEST'){
+    module.exports = require('./commonMockup');
+}
+else{
+    module.exports.storeUser = storeUser;
+    module.exports.findUserById = findUserById;
+    module.exports.findUserByEmail = findUserByEmail;
+}

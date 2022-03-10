@@ -9,9 +9,7 @@ const cookieParser = require("cookie-parser");
 
 const genUUID = require(path.join(__dirname, '../services/uuidFactory'))
 let ravendb = require(path.join(__dirname, '../dbUtils/common'));
-if (process.env.RUNMODE === 'TEST'){
-    ravendb = require(path.join(__dirname, '../dbUtils/commonMockup'));
-}
+
 const { User } = require('../dbUtils/modelClasses');
 const { genToken, tokenSignAuthenticationMiddleware } = require('../services/userSignAuthentication');
 

@@ -5,9 +5,6 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const parseToken = require(path.join(__dirname, '../services/tokenParser'));
 let ravendb = require(path.join(__dirname, '../dbUtils/common'));
-if (process.env.RUNMODE === 'TEST'){
-    ravendb = require(path.join(__dirname, '../dbUtils/commonMockup'));
-}
 
 function genToken(user) {
     return jwt.sign(user.id, process.env.ACCESS_TOKEN_SECRET)  //, { expiresIn: 300})
