@@ -6,8 +6,7 @@ const port = process.env.PORT;
 const app = express(); // Initialize the express web server
 const filesUploadRouter = require('./src/routes/filesUpload');
 const composeRouter = require('./src/routes/compose');
-const userAuth = require('./src/routes/userAuth')[0];
-const checkAuthenticated = require('./src/routes/userAuth')[1];
+const {userAuth, checkAuthenticated} = require('./src/routes/userAuth');
 const showFilesRouter = require('./src/routes/showFiles');
 const staticRouter = require('./src/routes/static');
 app.set('view engine', 'ejs');

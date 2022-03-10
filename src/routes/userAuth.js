@@ -127,4 +127,4 @@ function notValidateToken(req, res, next) {
     });
 }
 
-module.exports = [ router, validateToken ];
+module.exports = { userAuth: router, checkAuthenticated: validateToken };
