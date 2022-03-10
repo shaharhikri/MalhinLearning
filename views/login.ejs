@@ -15,36 +15,4 @@
     <a href="/register">Register</a>
 </body>
 
-<script>
-    let errorMessage = document.getElementById('errorMessage');
-    let emailInput = document.getElementById('emailInput');
-    let passwordInput = document.getElementById('passwordInput');
-    console.log('COOKIES: ',document.cookie)
-
-    async function login() { 
-        let data = { email: emailInput.value, password: passwordInput.value}
-        return await fetch('/login', {
-            method: "POST", 
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then((response) => {
-            return response.json();
-        }).then((jsonObject) => {
-            if(jsonObject.token){
-                let d = new Date();
-                d.setTime(d.getTime() + (31 * 24 * 60 * 60 * 1000)); //31 dayes
-                let expDate = d.toGMTString();
-                document.cookie = JSON.stringify(jsonObject) + "; expires=" + expDate + ";path=/";
-                location.replace('/');
-            }
-            else if(jsonObject.error){
-                console.log('error login!',jsonObject)
-                errorMessage.innerHTML = jsonObject.error;
-            }
-        });
-    }
-
-</script>
+<script type='text/javascript' src="/static/scripts/login_script.js"></script>
