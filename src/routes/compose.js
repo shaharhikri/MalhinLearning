@@ -12,7 +12,6 @@ const userActionAuthorization = require(path.join(__dirname, '../services/userAc
 const router = express.Router();
 router.use(bodyParser.json())
 
-//TODO: add token veification
 router.post("/", userActionAuthorization, (req, res) => {
     let id = req.body.id
     let idsuffix = id.split("/")[1];

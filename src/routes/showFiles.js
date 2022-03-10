@@ -5,17 +5,18 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs-extra');
 const bodyParser = require('body-parser')
-const jsonParser = bodyParser.json()
 const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'));
 fs.ensureDir(uploadPath); // Make sure that he upload path exits
+const userActionAuthorization = require(path.join(__dirname, '../services/userActionAuthorization'));
 
 const router = express.Router();
+router.use(bodyParser.json())
 
-router.post("/", jsonParser, (req, res, next) => {
-    //TODO: add token veification
+router.post("/", userActionAuthorization, (req, res) => {
     let id = req.body.id
     let idsuffix = id.split("/")[1];
     let myPath = path.join(uploadPath,idsuffix);
+    console.log('showFiles')
 
     if(!fs.existsSync(myPath))
         res.json([]);
