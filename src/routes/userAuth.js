@@ -1,15 +1,14 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const express = require('express')
+const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 const path = require('path');
 const cookieParser = require("cookie-parser");
 const parseToken = require(path.join(__dirname, '../services/tokenParser'));
 
-const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'));
-const genUUID = require(path.join(__dirname, '../services/uuidFactory'));
+const genUUID = require(path.join(__dirname, '../services/uuidFactory'))
 let ravendb = require(path.join(__dirname, '../dbUtils/common'));
 if (process.env.RUNMODE === 'TEST'){
     ravendb = require(path.join(__dirname, '../dbUtils/commonMockup'));
@@ -65,7 +64,7 @@ router.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     const newUser = new User(
-        await genUUID(uploadPath),
+        await genUUID(),
         req.body.name,
         req.body.email,
         salt,
@@ -79,6 +78,7 @@ function genToken(user) {
     return jwt.sign(user.id, process.env.ACCESS_TOKEN_SECRET)  //, { expiresIn: 300})
 }
 
+//main page using this
 function validateToken(req, res, next) {
     const token = parseToken(req);
     if(!token){
@@ -92,6 +92,7 @@ function validateToken(req, res, next) {
             return;
         }
         let userId = decriptedToken;
+        console.log('validateToken',userId)
         req.user = await ravendb.findUserById(userId);
         if (!req.user) {
             res.redirect('/login');
@@ -101,7 +102,7 @@ function validateToken(req, res, next) {
     });
 }
 
-//login using this
+//login/register using this
 function notValidateToken(req, res, next) {
 
     const token = parseToken(req);
@@ -116,6 +117,7 @@ function notValidateToken(req, res, next) {
             return;
         }
         let userId = decriptedToken;
+        console.log('notValidateToken',userId)
         req.user = await ravendb.findUserById(userId);
         if (!req.user) {
             next()
