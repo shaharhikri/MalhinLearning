@@ -12,51 +12,58 @@ function genToken(user) {
 
 //main page using this
 function tokenConnectedAuthenticationMiddleware(req, res, next) {
-    const token = parseToken(req);
-    if(!token){
-        res.redirect('/login');
-        return;
-    }
+    try{
+        const token = parseToken(req);
+        if(!token){
+            res.redirect('/login');
+            return;
+        }
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
-        if (err || !decriptedToken) {
-            res.redirect('/login');
-            return;
-        }
-        let userId = decriptedToken;
-        console.log('validateToken',userId)
-        req.user = await ravendb.findUserById(userId);
-        if (!req.user) {
-            res.redirect('/login');
-            return;
-        }
-        next()
-    });
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
+            if (err || !decriptedToken) {
+                res.redirect('/login');
+                return;
+            }
+            let userId = decriptedToken;
+            req.user = await ravendb.findUserById(userId);
+            if (!req.user) {
+                res.redirect('/login');
+                return;
+            }
+            next()
+        });
+    }
+    catch {
+        res.redirect('/login');
+    }
 }
 
 //login/register using this
 function tokenSignAuthenticationMiddleware(req, res, next) {
-
-    const token = parseToken(req);
-    if(!token){
-        next()
-        return;
+    try{
+        const token = parseToken(req);
+        if(!token){
+            next()
+            return;
+        }
+        
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
+            if (err || !decriptedToken) {
+                next()
+                return;
+            }
+            let userId = decriptedToken;
+            req.user = await ravendb.findUserById(userId);
+            if (!req.user) {
+                next()
+                return;
+            }
+            res.redirect('/');
+        });
     }
-    
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
-        if (err || !decriptedToken) {
-            next()
-            return;
-        }
-        let userId = decriptedToken;
-        console.log('notValidateToken',userId)
-        req.user = await ravendb.findUserById(userId);
-        if (!req.user) {
-            next()
-            return;
-        }
+    catch {
         res.redirect('/');
-    });
+    }
 }
 
 

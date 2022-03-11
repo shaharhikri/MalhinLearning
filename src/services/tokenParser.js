@@ -13,7 +13,6 @@ function getToken(req) {
         return token;
     }
     catch(e){
-        console.log('getToken - exception catched:',req.headers.cookie);
         return null;
     }  
 }

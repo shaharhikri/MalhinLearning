@@ -22,7 +22,6 @@ app.use(userSign);
  * Serve the basic index.ejs with upload form
  */
 app.get("/", tokenConnectedAuthenticationMiddleware, (req, res) => {
-    console.log(req.user);
     res.render('index' , { name: req.user.name, userid: req.user.id });
 });
 

@@ -13,20 +13,24 @@ const router = express.Router();
 router.use(bodyParser.json())
 
 router.post("/", tokenActionAuthorizationMiddleware, (req, res) => {
-    let id = req.body.id
-    let idsuffix = id.split("/")[1];
-    let myPath = path.join(uploadPath,idsuffix);
-    console.log('showFiles')
+    try{
+        let id = req.body.id
+        let idsuffix = id.split("/")[1];
+        let myPath = path.join(uploadPath,idsuffix);
 
-    if(!fs.existsSync(myPath))
-        res.json([]);
-    else{
-        fs.readdir(myPath, (err, result)=>{
-            if(err){
-                res.json({status: 'Error in read files from user(id) dir.'});
-            }
-            res.json(result);
-        });
+        if(!fs.existsSync(myPath))
+            res.json([]);
+        else{
+            fs.readdir(myPath, (err, result)=>{
+                if(err){
+                    res.json({status: 'Error in read files from user(id) dir.'});
+                }
+                res.json(result);
+            });
+        }
+    }
+    catch {
+        res.status(500).send();
     }
 });
 

@@ -13,39 +13,41 @@ const router = express.Router();
 router.use(bodyParser.json())
 
 router.post("/", tokenActionAuthorizationMiddleware, (req, res) => {
-    console.log('compose*******************1')
+    try{
+        let id = req.body.id
+        let idsuffix = id.split("/")[1];
 
-    let id = req.body.id
-    let idsuffix = id.split("/")[1];
+        let myPath = path.join(uploadPath, idsuffix);
+        console.log(myPath)
+        if (!fs.existsSync(myPath))
+            res.json({});
+        else {
+            fs.readdir(myPath, (err, result) => {
+                if (err) {
+                    res.json({ status: 'Error in read files from user(id) dir.' });
+                }
+                var dataToSend;
+                console.log('getUserSeed: filename: '+path.join(myPath, result[0]+'')+'\n'+programPath)
 
-    let myPath = path.join(uploadPath, idsuffix);
-    console.log(myPath)
-    if (!fs.existsSync(myPath))
-        res.json({});
-    else {
-        fs.readdir(myPath, (err, result) => {
-            if (err) {
-                res.json({ status: 'Error in read files from user(id) dir.' });
-            }
-            var dataToSend;
-            console.log('getUserSeed: filename: '+path.join(myPath, result[0]+'')+'\n'+programPath)
-
-            // spawn new child process to call the python script
-            const python = spawn('python', [programPath, path.join(myPath, result[0]+'')+' '+myPath]);
-            // collect data from script
-            python.stdout.on('data', function (data) {
-                console.log('Pipe data from python script ...');
-                dataToSend = data.toString();
+                // spawn new child process to call the python script
+                const python = spawn('python', [programPath, path.join(myPath, result[0]+'')+' '+myPath]);
+                // collect data from script
+                python.stdout.on('data', function (data) {
+                    console.log('Pipe data from python script ...');
+                    dataToSend = data.toString();
+                });
+            
+                python.on('close', (code) => {
+                    console.log(`child process close all stdio with code ${code}`);
+                    // send data to browser
+                    res.status(200).send();
+                });
             });
-        
-            python.on('close', (code) => {
-                console.log(`child process close all stdio with code ${code}`);
-                // send data to browser
-                res.status(200).send();
-            });
-        });
+        }
     }
-
+    catch {
+        res.status(500).send();
+    }
 })
 
 module.exports = router;

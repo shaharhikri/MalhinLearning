@@ -7,38 +7,47 @@ const parseToken = require(path.join(__dirname, '../services/tokenParser'));
 
 
 function tokenActionAuthorizationMiddleware(req, res, next) {
-    const ifAuthorized = () => { next(); };
-    const ifForbidden = () => { res.status(403).json({ error : 'You are not authorized to perform this action.' }); };
-    if(!req || !req.body){
-        ifForbidden();
-        return;
+    try{
+        const ifAuthorized = () => { next(); };
+        const ifForbidden = () => { res.status(403).json({ error : 'You are not authorized to perform this action.' }); };
+        
+        if(!req || !req.body){
+            ifForbidden();
+            return;
+        }
+        const token = parseToken(req);
+        const userIdForAction = req.body.id;
+        isAuthorized(token, userIdForAction, ifAuthorized, ifForbidden);
     }
-    const token = parseToken(req);
-    const userIdForAction = req.body.id;
-    console.log('req.body.id',req.body.id)
-    console.log('token',token)
-    isAuthorized(token, userIdForAction, ifAuthorized, ifForbidden);
+    catch {
+        res.status(500).send();
+    }
 }
 
 function isAuthorized(token, userIdForAction, ifAuthorized, ifForbidden) {
-    if(!token || !userIdForAction){
-        ifForbidden();
-        return;
-    }
-    
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
-        if (err || !decriptedToken) {
+    try{
+        if(!token || !userIdForAction){
             ifForbidden();
             return;
         }
-        let userId = decriptedToken;
+        
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decriptedToken) => {
+            if (err || !decriptedToken) {
+                ifForbidden();
+                return;
+            }
+            let userId = decriptedToken;
 
-        if (userId != userIdForAction) {
-            ifForbidden();
-            return;
-        }
-        ifAuthorized();
-    });
+            if (userId != userIdForAction) {
+                ifForbidden();
+                return;
+            }
+            ifAuthorized();
+        });
+    }
+    catch {
+        ifForbidden();
+    }
 }
 
 module.exports = { tokenActionAuthorizationMiddleware: tokenActionAuthorizationMiddleware, vaildateToken: isAuthorized }
