@@ -58,7 +58,7 @@ router.post('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
     try {
         if(req.body.name===''){
-            res.status(403).json({ error : 'Password missing' });
+            res.status(403).json({ error : 'Name missing' });
             return;
         }
         if(req.body.email===''){

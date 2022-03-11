@@ -1,18 +1,106 @@
-<h1>Login</h1>
 <body>
-    <label id="errorMessage"></label>
-    <div>
-        <label for="email">Email: </label>
-        <input type="email" id="emailInput" name="email" required>
-    </div>
-    <div>
-        <label for="password">Password: </label>
-        <input type="password" id="passwordInput" name="password" required>
-    </div>
-    <div>
-        <button type="button" onclick="login()">Login</button>
+    <h1>Malhin Leaning</h1>
+    <div class="center">
+        <h2>Login</h2>
+        <label id="errorMessage"></label>
+        <div class="txt_field">
+            <label for="email">Email: </label>
+            <input type="email" id="emailInput" name="email" required>
+        </div>
+        <div class="txt_field">
+            <label for="password">Password: </label>
+            <input type="password" id="passwordInput" name="password" required>
+        </div>
+        <div >
+            <button type="button" onclick="login()">Login</button>
+        </div>
     </div>
     <a href="/register">Register</a>
 </body>
 
 <script type='text/javascript' src="/static/scripts/login_script.js"></script>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body{
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(120deg,#2980b9, #8e44ad);
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    label, a {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+        color: #24252A;
+        text-decoration: none;
+        align-items: center;
+        margin: 5px;
+    }
+
+    h1, h2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 10%;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 500;
+        color: #616161;
+        text-decoration: none;
+    }
+
+    .center{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
+    }
+    .center h1{
+        text-align: center;
+        padding: 20px 0;
+        border-bottom: 1px solid silver;
+    }
+
+    .txt_field input{
+        width: 98%;
+        padding: 5px;
+        height: 40px;
+        font-size: 16px;
+        border: none;
+        background: #adadad;
+    }
+     
+    .txt_field label{
+        top: 50%;
+        left: 5px;
+        color: #adadad;
+        transform: translateY(-50%);
+        font-size: 16px;
+        pointer-events: none;
+        transition: .5s;
+    }
+
+    button{
+        width: 100%;
+        height: 50px;
+        border: 1px solid;
+        background: #2691d9;
+        border-radius: 25px;
+        font-size: 18px;
+        color: #e9f4fb;
+        font-weight: 700;
+    }
+
+</style>
