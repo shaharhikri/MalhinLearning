@@ -27,6 +27,15 @@ router.get('/register', tokenSignAuthenticationMiddleware, (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
+        if(req.body.email===''){
+            res.status(403).json({ error : 'Email missing' });
+            return;
+        }
+        if(req.body.password===''){
+            res.status(403).json({ error : 'Password missing' });
+            return;
+        }
+
         const foundUser = await ravendb.findUserByEmail(req.body.email);
         if( !foundUser ){
             res.status(403).json({ error : 'There\'s no such user' });
@@ -48,6 +57,19 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
     try {
+        if(req.body.name===''){
+            res.status(403).json({ error : 'Password missing' });
+            return;
+        }
+        if(req.body.email===''){
+            res.status(403).json({ error : 'Email missing' });
+            return;
+        }
+        if(req.body.password===''){
+            res.status(403).json({ error : 'Password missing' });
+            return;
+        }
+
         //Check If User Exists
         let foundUser = await ravendb.findUserByEmail(req.body.email);
         if (foundUser) {
