@@ -3,7 +3,8 @@ function getToken(req) {
         if (!req || !req.headers || !req.headers.cookie ){
             return null;
         }
-        const tokenObj = JSON.parse(req.headers.cookie);
+        const firstCookie = req.headers.cookie.split(";")[0];
+        const tokenObj = JSON.parse(firstCookie);
         if ( !tokenObj.token ){
             return null;
         }
@@ -12,7 +13,7 @@ function getToken(req) {
         return token;
     }
     catch(e){
-        console.log('getToken - exception catched:',e);
+        console.log('getToken - exception catched:',req.headers.cookie);
         return null;
     }  
 }

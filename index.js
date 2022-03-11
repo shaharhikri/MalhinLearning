@@ -6,7 +6,7 @@ const port = process.env.PORT;
 const app = express(); // Initialize the express web server
 const filesUploadRouter = require('./src/routes/filesUpload');
 const composeRouter = require('./src/routes/compose');
-const userAuth = require('./src/routes/userAuth');
+const userSign = require('./src/routes/userSign');
 const showFilesRouter = require('./src/routes/showFiles');
 const staticRouter = require('./src/routes/static');
 const { tokenConnectedAuthenticationMiddleware } = require('./src/services/userSignAuthentication');
@@ -15,7 +15,7 @@ app.use('/upload', filesUploadRouter);
 app.use('/compose', composeRouter);
 app.use('/getFilenames', showFilesRouter);
 app.use('/static', staticRouter);
-app.use(userAuth);
+app.use(userSign);
 
 
 /**

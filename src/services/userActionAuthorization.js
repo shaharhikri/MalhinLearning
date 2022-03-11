@@ -11,16 +11,17 @@ function tokenActionAuthorizationMiddleware(req, res, next) {
     const ifForbidden = () => { res.status(403).json({ error : 'You are not authorized to perform this action.' }); };
     if(!req || !req.body){
         ifForbidden();
-        console.log('tokenActionAuthorizationMiddleware ifForbidden')
         return;
     }
     const token = parseToken(req);
     const userIdForAction = req.body.id;
+    console.log('req.body.id',req.body.id)
+    console.log('token',token)
     isAuthorized(token, userIdForAction, ifAuthorized, ifForbidden);
 }
 
 function isAuthorized(token, userIdForAction, ifAuthorized, ifForbidden) {
-    if(!token){
+    if(!token || !userIdForAction){
         ifForbidden();
         return;
     }

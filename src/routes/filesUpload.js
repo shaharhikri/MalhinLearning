@@ -11,20 +11,15 @@ const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'
 fs.ensureDir(uploadPath); // Make sure that he upload path exits
 const { vaildateToken } = require(path.join(__dirname, '../services/userActionAuthorization'));
 const parseToken = require(path.join(__dirname, '../services/tokenParser'));
-
 const router = express.Router();
-
 router.use(busboy({ highWaterMark: 2 * 1024 * 1024, })); // Set 2MiB buffer
 
 router.post("/", (req, res, next) => {
     if (req === undefined)
         return;
-
     const token = parseToken(req);
     console.log('fileUpload token',token);
-
-    req.pipe(req.busboy); // Pipe it trough busboy
-    
+    req.pipe(req.busboy); // Pipe it trough busboy   
     req.busboy.on('field', function(key, value){
         try{
             let id = value;
@@ -43,7 +38,6 @@ router.post("/", (req, res, next) => {
             const ifForbidden = () => {                 
                 next();
             };
-
             vaildateToken(token, id, ifAuthorized, ifForbidden);
         }
         catch{
@@ -52,8 +46,7 @@ router.post("/", (req, res, next) => {
     });
     req.busboy.on('finish', function() {
         next();
-    });
-    
+    });  
 }, (req, res) => {
     console.log('fileUpload ifForbidden');
     res.status(403).send();

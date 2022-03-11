@@ -13,6 +13,8 @@ const router = express.Router();
 router.use(bodyParser.json())
 
 router.post("/", tokenActionAuthorizationMiddleware, (req, res) => {
+    console.log('compose*******************1')
+
     let id = req.body.id
     let idsuffix = id.split("/")[1];
 
@@ -39,7 +41,7 @@ router.post("/", tokenActionAuthorizationMiddleware, (req, res) => {
             python.on('close', (code) => {
                 console.log(`child process close all stdio with code ${code}`);
                 // send data to browser
-                res.redirect('/')
+                res.status(200).send();
             });
         });
     }
