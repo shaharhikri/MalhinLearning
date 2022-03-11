@@ -1,0 +1,29 @@
+<head>
+    <title>Malhin Leaning</title>
+</head>
+<h1>NAME: <%= name%></h1>
+
+<body>
+    <h1>File Upload:</h1>
+
+    <input id='filesChoice' type="file" name="fileToUpload" multiple />
+    <button type="button" onclick="uploadFile()">upload</button>
+
+    <!-- <form method="POST" action="/compose/getUserSeed/<%= userid%>" enctype="multipart/form-data">
+        <input type="submit" value="compose" />
+    </form> -->
+
+    <button type="button" onclick="compose()">compose</button>
+
+    <h1>My Files:</h1>
+    <ul id=fileList></ul>
+
+    <button type="button" onclick="logout()">logout</button>
+</body>
+
+<script>
+    var myid = '<%= userid%>'      
+    console.log("MyId "+myid)    
+</script>
+
+<script type='text/javascript' src="/static/scripts/index_script.js"></script>
