@@ -39,24 +39,28 @@ async function uploadFile() {
     if(filesChoice.files.length > 0){
         formData.append("file", filesChoice.files[0]);
     }
-    await fetch('/upload/', {
+    let res = await fetch('/upload/', {
       method: "POST", 
       body: formData
-    });    
-    alert('The file has been uploaded successfully.');
+    });
+    if(res.status==200){
+        alert('The file has been uploaded successfully.');
+    }
 }
 
 async function compose(){
-    await fetch('/compose/', {
+    let res = await fetch('/compose/', {
         method: "POST", 
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-      });    
-      alert('Composed successfully.');
+      })
 
-      //TODO: Multiple files instead of 1
+    if(res.status==200){
+        alert('Composed successfully.');
+    }
+    //TODO: Multiple files instead of 1
 }
 
 async function logout(){
