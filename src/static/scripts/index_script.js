@@ -45,6 +45,7 @@ async function uploadFile() {
     });
     if(res.status==200){
         alert('The file has been uploaded successfully.');
+        location.replace('/');
     }
 }
 
@@ -59,6 +60,7 @@ async function compose(){
 
     if(res.status==200){
         alert('Composed successfully.');
+        location.replace('/');
     }
     //TODO: Multiple files instead of 1
 }
