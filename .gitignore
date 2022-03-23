@@ -1,2 +1,5 @@
 WebServer/node_modules
 WebServer/uploads
+ComposeService/.idea
+ComposeService/__pycache__
+ComposeService/venv

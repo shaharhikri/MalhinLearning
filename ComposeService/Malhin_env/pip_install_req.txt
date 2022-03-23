@@ -1,0 +1,1 @@
+pip install -r C:\Users\Omer\Desktop\Malhin_env\requirements.txt
