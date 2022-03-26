@@ -96,7 +96,7 @@ class MelodyGenerator:
 
         return index
 
-    def save_melody(self, melody, step_duration=0.25, format="krn", file_name="mel.krn"):
+    def save_melody(self, melody, step_duration=0.25, format="midi", file_name="mel.midi"):
         """Converts a melody into a MIDI file
 
         :param melody (list of str):
