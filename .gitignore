@@ -1,6 +1,9 @@
 WebServer/node_modules
 WebServer/uploads
+WebServer/.vscode
 ComposeService/.idea
 ComposeService/__pycache__
 ComposeService/venv
 ComposeService/dataset/*
+ComposeService/krn_links_and_download/humdrum/.idea
+ComposeService/krn_links_and_download/humdrum/venv
