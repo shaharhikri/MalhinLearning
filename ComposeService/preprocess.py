@@ -7,6 +7,7 @@ SAVE_DIR = "dataset"
 SINGLE_FILE_DATASET = "file_dataset"
 MAPPING_PATH = "mapping.json"
 SEQUENCE_LENGTH = 64
+SEED_FLAG = False
 
 # durations are expressed in quarter length
 ACCEPTABLE_DURATIONS = [
@@ -32,12 +33,17 @@ def load_songs_in_kern(dataset_path):
     # go through all the files in dataset and load them with music21
     for path, subdirs, files in os.walk(dataset_path):
         for file in files:
-
+            print(type(file))
             # consider only kern files
             if file[-3:] == "krn":
-                song = m21.converter.parse(os.path.join(path, file))
+                song_path=os.path.join(path, file)
+                song = get_preprocessed_str(song_path) #m21.converter.parse(os.path.join(path, file))
                 songs.append(song)
     return songs
+
+
+def get_preprocessed_str(filename):
+    return m21.converter.parse(filename)
 
 
 def has_acceptable_durations(song, acceptable_durations):
@@ -62,6 +68,9 @@ def transpose(song):
 
     # get key from the song
     parts = song.getElementsByClass(m21.stream.Part)
+    p0 = parts.__next__()
+    print(p0)
+
     measures_part0 = parts[0].getElementsByClass(m21.stream.Measure)
     key = measures_part0[0][4]
 
@@ -144,6 +153,9 @@ def preprocess(dataset_path):
         with open(save_path, "w") as fp:
             fp.write(encoded_song)
 
+        if i % 10 == 0:
+            print(f"Song {i} out of {len(songs)} processed")
+
 
 def load(file_path):
     with open(file_path, "r") as fp:
@@ -178,6 +190,7 @@ def create_single_file_dataset(dataset_path, file_dataset_path, sequence_length)
         fp.write(songs)
 
     return songs
+
 
 
 def create_mapping(songs, mapping_path):

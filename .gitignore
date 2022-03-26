@@ -3,3 +3,4 @@ WebServer/uploads
 ComposeService/.idea
 ComposeService/__pycache__
 ComposeService/venv
+ComposeService/dataset/*

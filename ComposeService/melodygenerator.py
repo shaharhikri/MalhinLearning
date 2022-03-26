@@ -17,13 +17,13 @@ import os
 class MelodyGenerator:
     """A class that wraps the LSTM model and offers utilities to generate melodies."""
 
-    def __init__(self, model_path="model.h5"):
+    def __init__(self, model_filename="default_model.h5", mapping_filename="default_mapping.json"):
         """Constructor that initialises TensorFlow model"""
 
-        self.model_path = model_path
-        self.model = keras.models.load_model(model_path)
+        self.model_path = model_filename
+        self.model = keras.models.load_model(model_filename)
 
-        with open(MAPPING_PATH, "r") as fp:
+        with open(mapping_filename, "r") as fp:
             self._mappings = json.load(fp)
 
         self._start_symbols = ["/"] * SEQUENCE_LENGTH
@@ -59,7 +59,7 @@ class MelodyGenerator:
             onehot_seed = onehot_seed[np.newaxis, ...]
 
             # make a prediction
-            probabilities = self.model.predict(onehot_seed)[0]
+            probabilities = self.model.predict(onehot_seed)[0] #exception
             # [0.1, 0.2, 0.1, 0.6] -> 1
             output_int = self._sample_with_temperature(probabilities, temperature)
 
@@ -96,7 +96,7 @@ class MelodyGenerator:
 
         return index
 
-    def save_melody(self, melody, step_duration=0.25, format="midi", file_name="mel.mid"):
+    def save_melody(self, melody, step_duration=0.25, format="krn", file_name="mel.krn"):
         """Converts a melody into a MIDI file
 
         :param melody (list of str):
@@ -144,22 +144,19 @@ class MelodyGenerator:
         # write the m21 stream to a midi file
         stream.write(format, file_name)
 
-    def extract_seed(self, io_file_path):
-        seed_file = open(io_file_path, "r")
-        ext_seed = seed_file.read()
-        seed_file.close()
-        return ext_seed
-
-
-if __name__ == "__main__":
-    mg = MelodyGenerator()
-
-    ## TODO: get the path to user's folder by request
-    io_file_path = "/Users/Omer/Desktop/user_uploads/user_seed.txt"
-    user_seed = mg.extract_seed(io_file_path)
-    print(user_seed)
-    # seed = "67 _ 67 _ 67 _ _ 65 64 _ 64 _ 64 _ _"
-    # seed2 = "67 _ _ _ _ _ 65 _ 64 _ 62 _ 60 _ _ _"
-    melody = mg.generate_melody(user_seed, 500, SEQUENCE_LENGTH, 0.3)
-    print(melody)
-    mg.save_melody(melody)
+#Testing
+# def main():
+#     mg = MelodyGenerator()
+#     ## TODO: get the path to user's folder by request
+#     io_file_path = "/Users/Omer/Desktop/user_uploads/user_seed.txt"
+#     user_seed = mg.extract_seed(io_file_path)
+#     print(user_seed)
+#     # seed = "67 _ 67 _ 67 _ _ 65 64 _ 64 _ 64 _ _"
+#     # seed2 = "67 _ _ _ _ _ 65 _ 64 _ 62 _ 60 _ _ _"
+#     melody = mg.generate_melody(user_seed, 500, SEQUENCE_LENGTH, 0.3)
+#     print(melody)
+#     mg.save_melody(melody)
+#
+#
+# if __name__ == "__main__":
+#     main()

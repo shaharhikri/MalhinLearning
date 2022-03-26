@@ -1,0 +1,11 @@
+{
+  'walts' : {
+    'model' : 'geners/walstz_model.h5',
+    'mapping' : 'geners/walstz_mapping.json'
+  },
+  'symphonies' : {
+    'model' : 'geners/symphonies_model.h5',
+    'mapping' : 'geners/symphonies_mapping.json'
+  }
+
+}
