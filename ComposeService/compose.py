@@ -16,10 +16,11 @@ def compose(input_filename: str ,output_filename: str , genre: str):
         seed = extract_random_seed(pp_str)
 
         genre = genre.lower()
-        model_filename = 'trained_genres_models/'+genre+'_model.h5'
-        mapping_filename = 'common_mapping.json' #'trained_genres_models/' + genre + '_mapping.json'
+        model_filename = './trained_genres_models/'+genre+'_model.h5'
+        mapping_filename = './common_mapping.json' #'trained_genres_models/' + genre + '_mapping.json'
 
-        if not check_genre_existence(genre):
+        if not check_genre_existence(model_filename, mapping_filename):
+            print("compose: Missing Requested Model/Mapping file")
             return False
 
         generator = mg.MelodyGenerator(model_filename, mapping_filename)
@@ -54,10 +55,8 @@ def extract_random_seed(pp_str):
 
     return pp_str[seed_start_pos:seed_end_pos]
 
-def check_genre_existence(genre):
-    model_filename = 'trained_genres_models/'+genre+'_model.h5'
-    mapping_filename = 'trained_genres_models/' + genre + '_mapping.json'
 
+def check_genre_existence(model_filename, mapping_filename):
     if exists(model_filename) and exists(mapping_filename):
         return True
     else:
