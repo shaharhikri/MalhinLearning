@@ -32,6 +32,16 @@ async function findUserByEmail(email){
     return users.find(u => u.email === email)
 }
 
+// attachments funcs
+async function storeAttachment(id, fileName, attachmentName){ }
+
+async function getAttachmentsInfo(id){ }
+
+async function getAttachment(id, filename){ }
+
 module.exports.storeUser = storeUser;
 module.exports.findUserById = findUserById;
 module.exports.findUserByEmail = findUserByEmail;
+module.exports.storeAttachment = storeAttachment;
+module.exports.getAttachmentsInfo = getAttachmentsInfo;
+module.exports.getAttachment = getAttachment;

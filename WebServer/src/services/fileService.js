@@ -6,7 +6,7 @@ function uploadFile(readStreamFiles, filename, mimeType, allowedType, uploadPath
     if (filename === '') {
         console.log(`Tried to upload no file.`);
     } else if (mimeType != allowedType) {
-        console.log(`File '${filename}' is unsupported.`);
+        console.log(`File '${filename}' is unsupported. ${mimeType} ${typeof mimeType}`);
     } else {
         console.log(`Upload of '${filename}' started`);
 

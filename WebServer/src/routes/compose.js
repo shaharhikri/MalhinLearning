@@ -2,46 +2,51 @@ const dotenv = require('dotenv');
 dotenv.config();
 const express = require('express');
 const path = require('path');
-const { spawn } = require('child_process');
 const uploadPath = require(path.join(__dirname, '../services/uploadsPathService'));
-const programPath = process.env.SCRIPT_PATH
 const fs = require('fs-extra');
 const bodyParser = require('body-parser')
 const { tokenActionAuthorizationMiddleware } = require(path.join(__dirname, '../services/userActionAuthorization'));
+const letscompose = require(path.join(__dirname, '../services/composeService'));
+let ravendb = require(path.join(__dirname, '../dbUtils/common'));
 
 const router = express.Router();
 router.use(bodyParser.json())
 
-router.post("/", tokenActionAuthorizationMiddleware, (req, res) => {
+router.post("/", tokenActionAuthorizationMiddleware, async (req, res) => {
     try{
         let id = req.body.id
         let idsuffix = id.split("/")[1];
 
-        let myPath = path.join(uploadPath, idsuffix);
+        let myPath = path.join(uploadPath, idsuffix); // Current user upload folder 
         console.log(myPath)
         if (!fs.existsSync(myPath))
             res.json({});
         else {
-            fs.readdir(myPath, (err, result) => {
-                if (err) {
-                    res.json({ status: 'Error in read files from user(id) dir.' });
+            fs.readdir(myPath, async (err, result) => {
+                let inputfile = '';
+                let outputfile = '';
+                let outputfile_name = '';
+                let genre = '';
+                if(result && result.length>0){
+                    genre = 'waltzes'
+                    inputfile_name = result[0]+'';
+                    inputfile = path.join(myPath, inputfile_name); 
+                    outputfile_suffix = getOutputfileSuffix(genre);
+                    outputfile_name = inputfile_name.split('.')[0]+outputfile_suffix+'.midi'
+                    outputfile = path.join(myPath, outputfile_name);
                 }
-                var dataToSend;
-                console.log('getUserSeed: filename: '+path.join(myPath, result[0]+'')+'\n'+programPath)
+                let letscompose_result = await letscompose(inputfile, outputfile, genre );
 
-                // spawn new child process to call the python script
-                const python = spawn('python', [programPath, path.join(myPath, result[0]+'')+' '+myPath]);
-                // collect data from script
-                python.stdout.on('data', function (data) {
-                    console.log('Pipe data from python script ...');
-                    dataToSend = data.toString();
-                });
-            
-                python.on('close', (code) => {
-                    console.log(`child process close all stdio with code ${code}`);
-                    // send data to browser
-                    res.status(200).send();
-                });
+                if(letscompose_result.succeeded){
+                    await ravendb.storeAttachment(id,outputfile,outputfile_name);
+
+                    fs.exists(outputfile, function(exists) {
+                        if(exists) {
+                            fs.unlink(outputfile);
+                        }
+                    });
+                }
+                res.status(letscompose_result.resStatus).json(letscompose_result.resMsg);
             });
         }
     }
@@ -49,5 +54,20 @@ router.post("/", tokenActionAuthorizationMiddleware, (req, res) => {
         res.status(500).send();
     }
 })
+
+function getOutputfileSuffix(genre){   
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    let h = today.getHours();
+    let m = today.getMinutes();
+    let s = today.getSeconds();
+    let ms = today.getMilliseconds();
+
+    let suffix = '_' + genre + '_' + dd + '-' + mm + '-'  + yyyy + '_' + h + '-'+ m + '-'+ s + '-'+ ms;
+    return suffix;
+}
+
 
 module.exports = router;

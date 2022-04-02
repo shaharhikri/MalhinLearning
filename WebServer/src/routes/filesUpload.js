@@ -26,6 +26,9 @@ router.post("/", (req, res, next) => {
                 const ifAuthorized = () => {
                     let idsuffix = id.split("/")[1];
                     let myPath = path.join(uploadPath,idsuffix);
+
+                    if(fs.existsSync(myPath))
+                        deleteFolderRecursive(myPath);
                     if(!fs.existsSync(myPath))
                         fs.mkdirSync(myPath);
                 
@@ -53,5 +56,21 @@ router.post("/", (req, res, next) => {
 }, (req, res) => {
     res.status(403).send();
 });
+
+function deleteFolderRecursive(path) {
+    var files = [];
+    if( fs.existsSync(path) ) {
+        files = fs.readdirSync(path);
+        files.forEach(function(file,index){
+            var curPath = path + "/" + file;
+            if(fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+}
 
 module.exports = router;

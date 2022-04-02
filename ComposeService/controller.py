@@ -26,7 +26,7 @@ def compose_req():
 
         # generate seed
         if cm.compose(input_filename, output_filename, genre):
-            res = make_response(jsonify(output_file=output_filename), 200)
+            res = make_response(jsonify(outputfile=output_filename), 200)
             return res
         else:
             res = make_response(jsonify(error='Compose error'), 500)
