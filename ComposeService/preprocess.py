@@ -246,39 +246,39 @@ def convert_songs_to_int(songs):
     return int_songs
 
 
-def generate_training_sequences(sequence_length):
-    """Create input and output data samples for training. Each sample is a sequence.
-
-    :param sequence_length (int): Length of each sequence. With a quantisation at 16th notes, 64 notes equates to 4 bars
-
-    :return inputs (ndarray): Training inputs
-    :return targets (ndarray): Training targets
-    """
-
-    # load songs and map them to int
-    songs = load(SINGLE_FILE_DATASET)
-    int_songs = convert_songs_to_int(songs)
-
-    print(int_songs)
-
-    inputs = []
-    targets = []
-
-    # generate the training sequences
-    num_sequences = len(int_songs) - sequence_length
-    for i in range(num_sequences):
-        inputs.append(int_songs[i:i + sequence_length])
-        targets.append(int_songs[i + sequence_length])
-
-    # one-hot encode the sequences
-    vocabulary_size = get_vocabulay_size()  # len(set(int_songs))
-    # inputs size: (# of sequences, sequence length, vocabulary size)
-    inputs = keras.utils.to_categorical(inputs, num_classes=vocabulary_size)
-    targets = np.array(targets)
-
-    print(f"There are {len(inputs)} sequences.")
-
-    return inputs, targets
+# def generate_training_sequences(sequence_length):
+#     """Create input and output data samples for training. Each sample is a sequence.
+#
+#     :param sequence_length (int): Length of each sequence. With a quantisation at 16th notes, 64 notes equates to 4 bars
+#
+#     :return inputs (ndarray): Training inputs
+#     :return targets (ndarray): Training targets
+#     """
+#
+#     # load songs and map them to int
+#     songs = load(SINGLE_FILE_DATASET)
+#     int_songs = convert_songs_to_int(songs)
+#
+#     print(int_songs)
+#
+#     inputs = []
+#     targets = []
+#
+#     # generate the training sequences
+#     num_sequences = len(int_songs) - sequence_length
+#     for i in range(num_sequences):
+#         inputs.append(int_songs[i:i + sequence_length])
+#         targets.append(int_songs[i + sequence_length])
+#
+#     # one-hot encode the sequences
+#     vocabulary_size = get_vocabulay_size()  # len(set(int_songs))
+#     # inputs size: (# of sequences, sequence length, vocabulary size)
+#     inputs = keras.utils.to_categorical(inputs, num_classes=vocabulary_size)
+#     targets = np.array(targets)
+#
+#     print(f"There are {len(inputs)} sequences.")
+#
+#     return inputs, targets
 
 
 def get_vocabulay_size():

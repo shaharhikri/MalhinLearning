@@ -3,8 +3,16 @@ import melodygenerator as mg
 import os
 import random
 from os.path import exists
+import json
 
-SEED_DEFAULT_LEN = 30
+SEED_DEFAULT_LEN = 20
+MAPPING_FILE = './common_mapping.json' #'trained_genres_models/' + genre + '_mapping.json'
+MAPPING_KEYS = None
+with open(MAPPING_FILE, "r") as fp:
+    mappings = json.load(fp)
+    MAPPING_KEYS = list(dict(mappings).keys())
+
+print('MAPPING_KEYS:',MAPPING_KEYS)
 
 
 def compose(input_filename: str ,output_filename: str , genre: str):
@@ -17,13 +25,16 @@ def compose(input_filename: str ,output_filename: str , genre: str):
 
         genre = genre.lower()
         model_filename = './trained_genres_models/'+genre+'_model.h5'
-        mapping_filename = './common_mapping.json' #'trained_genres_models/' + genre + '_mapping.json'
 
-        if not check_genre_existence(model_filename, mapping_filename):
-            print("compose: Missing Requested Model/Mapping file")
+        if not exists(model_filename):
+            print("compose: Missing Requested \'"+genre+"\' Model file")
             return False
 
-        generator = mg.MelodyGenerator(model_filename, mapping_filename)
+        if not exists(MAPPING_FILE):
+            print("compose: Missing common mapping file")
+            return False
+
+        generator = mg.MelodyGenerator(model_filename, MAPPING_FILE)
 
         melody = generator.generate_melody(seed, 500, pp.SEQUENCE_LENGTH, 0.3)
         generator.save_melody(melody, file_name=output_filename)
@@ -46,18 +57,35 @@ def get_encoded_song(input_filename):
 
 
 def extract_random_seed(pp_str):
-    n = len(pp_str)
-    if n < SEED_DEFAULT_LEN:
-        return pp_str
+    pp_list = get_clean_pp_list(pp_str.split(' '))
+    n = len(pp_list)
 
-    seed_start_pos = random.randint(0, n-SEED_DEFAULT_LEN)
-    seed_end_pos = seed_start_pos + SEED_DEFAULT_LEN
-
-    return pp_str[seed_start_pos:seed_end_pos]
-
-
-def check_genre_existence(model_filename, mapping_filename):
-    if exists(model_filename) and exists(mapping_filename):
-        return True
+    if n <= SEED_DEFAULT_LEN:
+        seed_list = pp_list
     else:
-        return False
+        seed_start_pos = random.randint(0, n-SEED_DEFAULT_LEN)
+        seed_end_pos = seed_start_pos + SEED_DEFAULT_LEN
+        seed_list = pp_list[seed_start_pos:seed_end_pos]
+    return get_seed_str(seed_list)
+
+def get_clean_pp_list(pp_list):
+    pp_list_clean = []
+    invalid_note = False
+    for note in pp_list:
+        if invalid_note and note=='_':
+            continue;
+
+        if note not in MAPPING_KEYS:
+            invalid_note = True
+        else:
+            pp_list_clean.append(note)
+            invalid_note = False
+
+    return pp_list_clean
+
+def get_seed_str(seed_list):
+    seed_str = ''
+    for e in seed_list:
+        seed_str = seed_str + e + ' '
+    seed_str = seed_str[0:len(seed_str)-1]
+    return seed_str
