@@ -16,8 +16,10 @@ router.use(busboy({ highWaterMark: 2 * 1024 * 1024, })); // Set 2MiB buffer
 
 router.post("/", (req, res, next) => {
     try{
-        if (req === undefined)
-        return;
+        if (req === undefined){
+            res.status(400).send();
+            return;
+        }
         const token = parseToken(req);
         req.pipe(req.busboy); // Pipe it trough busboy   
         req.busboy.on('field', function(key, value){
@@ -33,8 +35,11 @@ router.post("/", (req, res, next) => {
                         fs.mkdirSync(myPath);
                 
                     req.busboy.on('file', (fieldname, file, filename, x,  mimeType) => {
-                        uploadFile(file, filename, mimeType,fileType, myPath);
-                        res.status(200).send();;
+                        let uploadFile_res = uploadFile(file, filename, mimeType,fileType, myPath);
+                        if ( uploadFile_res && uploadFile_res.succeeded)
+                            res.status(200).send();
+                        else
+                            res.status(400).json({ error : uploadFile_res.msg});
                     });
                 }
                 const ifForbidden = () => {                 

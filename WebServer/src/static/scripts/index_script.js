@@ -19,9 +19,9 @@ function getFileNamesPromise() {
 let fileList = document.getElementById('fileList');
 getFileNamesPromise().then((namesArr) => {
     try {
-        for (name of namesArr) {
+        for (n of namesArr) {
             let item = document.createElement('li')
-            item.innerHTML = name;
+            item.innerHTML = n;
             fileList.appendChild(item);
         }
     } catch (err) {
@@ -47,6 +47,15 @@ async function uploadFile() {
         alert('The file has been uploaded successfully.');
         location.replace('/');
     }
+    else if(res.status==403){
+        alert('Please choose file to upload first.');
+        location.replace('/');
+    }
+    else {
+        let j = await res.json();
+        alert(j.error);
+        location.replace('/');
+    }
 }
 
 async function compose(){
@@ -55,12 +64,18 @@ async function compose(){
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+            id: myid,
+            genre : 'waltzes'
+        })
       })
 
     if(res.status==200){
         alert('Composed successfully.');
         location.replace('/');
+    }
+    else if(res.status==400){
+        alert('Upload file before.');
     }
     //TODO: Multiple files instead of 1
 }
@@ -82,3 +97,26 @@ function delCookie()
 }
 
 console.log('COOKIES: ',document.cookie)
+
+let melodiesList = document.getElementById('melodiesList');
+async function renderMelodies(){
+    let res = await fetch('/melodies/getattachmentsnames', {
+        method: 'GET',
+    })
+    if(res.status==200){
+        let names = await res.json();
+        for (n of names) {
+            item = document.createElement('li');
+            link  = document.createElement('a');
+            text = document.createTextNode(n);
+
+            link.href = '/melodies/download/'+n;
+            link.setAttribute("class", "some-class-name");
+            link.appendChild(text);
+            item.appendChild(link);
+            melodiesList.appendChild(item);
+        }
+    }
+}
+
+renderMelodies();

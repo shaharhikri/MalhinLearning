@@ -64,7 +64,7 @@ async function getAttachmentsInfo(id){
     }
     catch (e){
         console.log('common::getAttachmentsNames - RavenException', e);
-        return [];
+        return null;
     }
 }
 
@@ -81,7 +81,7 @@ async function getAttachment(id, filename){
     }
 }
 
-if (process.env.RUNMODE === 'TEST'){
+if (process.env.DB_MOCKUP === 'TRUE'){
     module.exports = require('./commonMockup');
 }
 else{

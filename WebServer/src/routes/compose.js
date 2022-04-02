@@ -7,10 +7,12 @@ const fs = require('fs-extra');
 const bodyParser = require('body-parser')
 const { tokenActionAuthorizationMiddleware } = require(path.join(__dirname, '../services/userActionAuthorization'));
 const letscompose = require(path.join(__dirname, '../services/composeService'));
-let ravendb = require(path.join(__dirname, '../dbUtils/common'));
+const ravendb = require(path.join(__dirname, '../dbUtils/common'));
+const default_genre = 'waltzes';
+
 
 const router = express.Router();
-router.use(bodyParser.json())
+router.use(bodyParser.json());
 
 router.post("/", tokenActionAuthorizationMiddleware, async (req, res) => {
     try{
@@ -23,30 +25,34 @@ router.post("/", tokenActionAuthorizationMiddleware, async (req, res) => {
             res.json({});
         else {
             fs.readdir(myPath, async (err, result) => {
-                let inputfile = '';
-                let outputfile = '';
-                let outputfile_name = '';
-                let genre = '';
+                let inputfile, outputfile, outputfile_name, genre;
+                genre = req.body.genre;
+                if(!genre)
+                    genre = default_genre
                 if(result && result.length>0){
-                    genre = 'waltzes'
                     inputfile_name = result[0]+'';
                     inputfile = path.join(myPath, inputfile_name); 
                     outputfile_suffix = getOutputfileSuffix(genre);
                     outputfile_name = inputfile_name.split('.')[0]+outputfile_suffix+'.midi'
                     outputfile = path.join(myPath, outputfile_name);
                 }
-                let letscompose_result = await letscompose(inputfile, outputfile, genre );
+                if(inputfile && outputfile && genre){
+                    let letscompose_result = await letscompose(inputfile, outputfile, genre );
 
-                if(letscompose_result.succeeded){
-                    await ravendb.storeAttachment(id,outputfile,outputfile_name);
+                    if(letscompose_result.succeeded){
+                        await ravendb.storeAttachment(id,outputfile,outputfile_name);
 
-                    fs.exists(outputfile, function(exists) {
-                        if(exists) {
-                            fs.unlink(outputfile);
-                        }
-                    });
+                        fs.exists(outputfile, function(exists) {
+                            if(exists) {
+                                fs.unlink(outputfile);
+                            }
+                        });
+                    }
+                    res.status(letscompose_result.resStatus).json(letscompose_result.resMsg);
                 }
-                res.status(letscompose_result.resStatus).json(letscompose_result.resMsg);
+                else {
+                    res.status(400).json({ error : 'No given file to compose.'});
+                }
             });
         }
     }

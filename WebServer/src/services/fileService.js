@@ -5,8 +5,10 @@ const path = require('path');
 function uploadFile(readStreamFiles, filename, mimeType, allowedType, uploadPath) {
     if (filename === '') {
         console.log(`Tried to upload no file.`);
+        return { succeeded: false, msg : `Tried to upload no file.`};
     } else if (mimeType != allowedType) {
-        console.log(`File '${filename}' is unsupported. ${mimeType} ${typeof mimeType}`);
+        console.log(`File '${filename}' is unsupported.`);
+        return { succeeded: false, msg : `File '${filename}' is unsupported. ${mimeType} ${typeof mimeType}`};
     } else {
         console.log(`Upload of '${filename}' started`);
 
@@ -20,6 +22,7 @@ function uploadFile(readStreamFiles, filename, mimeType, allowedType, uploadPath
         fstream.on('close', () => {
             console.log(`Upload of '${filename}' finished`);
         });
+        return { succeeded: true, msg : ''};
     }
 }
 
