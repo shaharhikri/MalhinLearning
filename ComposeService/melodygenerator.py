@@ -17,7 +17,7 @@ import os
 class MelodyGenerator:
     """A class that wraps the LSTM model and offers utilities to generate melodies."""
 
-    def __init__(self, model_filename="default_model.h5", mapping_filename="default_mapping.json"):
+    def __init__(self, model_filename="default_model.h5", mapping_filename="common_mapping.json"):
         """Constructor that initialises TensorFlow model"""
 
         self.model_path = model_filename

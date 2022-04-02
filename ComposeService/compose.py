@@ -4,12 +4,6 @@ import os
 import random
 from os.path import exists
 
-
-SEED_FILE = "user_seed.txt"
-SEED_CACHE_DIR = "/seed_cache"
-# ENCODED_SONGS_DIR = "dataset"
-# SINGLE_FILE_DATASET = "seed_pool"
-# SEQUENCE_LENGTH = 64
 SEED_DEFAULT_LEN = 30
 
 
@@ -23,7 +17,7 @@ def compose(input_filename: str ,output_filename: str , genre: str):
 
         genre = genre.lower()
         model_filename = 'trained_genres_models/'+genre+'_model.h5'
-        mapping_filename = 'trained_genres_models/' + genre + '_mapping.json'
+        mapping_filename = 'common_mapping.json' #'trained_genres_models/' + genre + '_mapping.json'
 
         if not check_genre_existence(genre):
             return False

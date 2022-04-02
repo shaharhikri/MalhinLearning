@@ -1,0 +1,4 @@
+music21==7.1.0
+numpy==1.18.5
+tensorflow==1.15.5
+flask~=2.0.3

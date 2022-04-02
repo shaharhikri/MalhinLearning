@@ -1,24 +1,25 @@
 import os
 import json
 import music21 as m21
+import numpy as np
+import tensorflow.keras as keras
 
-KERN_DATASET_PATH = "deutschl/test"
+KERN_DATASET_PATH = "krns"
 SAVE_DIR = "dataset"
 SINGLE_FILE_DATASET = "file_dataset"
 MAPPING_PATH = "mapping.json"
 SEQUENCE_LENGTH = 64
-SEED_FLAG = False
 
 # durations are expressed in quarter length
 ACCEPTABLE_DURATIONS = [
-    0.25, # 16th note
-    0.5, # 8th note
+    0.25,  # 16th note
+    0.5,  # 8th note
     0.75,
-    1.0, # quarter note
+    1.0,  # quarter note
     1.5,
-    2, # half note
+    2,  # half note
     3,
-    4 # whole note
+    4  # whole note
 ]
 
 
@@ -29,16 +30,24 @@ def load_songs_in_kern(dataset_path):
     :return songs (list of m21 streams): List containing all pieces
     """
     songs = []
+    count = 0
 
     # go through all the files in dataset and load them with music21
     for path, subdirs, files in os.walk(dataset_path):
         for file in files:
-            print(type(file))
+
             # consider only kern files
-            if file[-3:] == "krn":
-                song_path=os.path.join(path, file)
-                song = get_preprocessed_str(song_path) #m21.converter.parse(os.path.join(path, file))
-                songs.append(song)
+            try:
+                if file[-3:] == "krn":
+                    song_path = os.path.join(path, file)
+                    song = get_preprocessed_str(song_path)  # m21.converter.parse(os.path.join(path, file))
+                    songs.append(song)
+            except Exception as e:
+                count += 1
+                # print("song: ", file, "\nerror: ",e)
+
+    print('******************************************** error songs # is', count)
+
     return songs
 
 
@@ -60,33 +69,34 @@ def has_acceptable_durations(song, acceptable_durations):
 
 
 def transpose(song):
-    """Transposes song to C maj/A min
+    try:
+        """Transposes song to C maj/A min
 
-    :param piece (m21 stream): Piece to transpose
-    :return transposed_song (m21 stream):
-    """
+        :param piece (m21 stream): Piece to transpose
+        :return transposed_song (m21 stream):
+        """
 
-    # get key from the song
-    parts = song.getElementsByClass(m21.stream.Part)
-    p0 = parts.__next__()
-    print(p0)
+        # get key from the song
+        parts = song.getElementsByClass(m21.stream.Part)
+        measures_part0 = parts[0].getElementsByClass(m21.stream.Measure)
+        key = measures_part0[0][4]
 
-    measures_part0 = parts[0].getElementsByClass(m21.stream.Measure)
-    key = measures_part0[0][4]
+        # estimate key using music21
+        if not isinstance(key, m21.key.Key):
+            key = song.analyze("key")
 
-    # estimate key using music21
-    if not isinstance(key, m21.key.Key):
-        key = song.analyze("key")
+        # get interval for transposition. E.g., Bmaj -> Cmaj
+        if key.mode == "major":
+            interval = m21.interval.Interval(key.tonic, m21.pitch.Pitch("C"))
+        elif key.mode == "minor":
+            interval = m21.interval.Interval(key.tonic, m21.pitch.Pitch("A"))
 
-    # get interval for transposition. E.g., Bmaj -> Cmaj
-    if key.mode == "major":
-        interval = m21.interval.Interval(key.tonic, m21.pitch.Pitch("C"))
-    elif key.mode == "minor":
-        interval = m21.interval.Interval(key.tonic, m21.pitch.Pitch("A"))
-
-    # transpose song by calculated interval
-    tranposed_song = song.transpose(interval)
-    return tranposed_song
+        # transpose song by calculated interval
+        tranposed_song = song.transpose(interval)
+        return tranposed_song
+    except Exception as e:
+        print('transpose:', e)
+        return None
 
 
 def encode_song(song, time_step=0.25):
@@ -107,7 +117,7 @@ def encode_song(song, time_step=0.25):
 
         # handle notes
         if isinstance(event, m21.note.Note):
-            symbol = event.pitch.midi # 60
+            symbol = event.pitch.midi  # 60
         # handle rests
         elif isinstance(event, m21.note.Rest):
             symbol = "r"
@@ -130,31 +140,36 @@ def encode_song(song, time_step=0.25):
 
 
 def preprocess(dataset_path):
+    try:
+        # load folk songs
+        print("Loading songs...")
+        songs = load_songs_in_kern(dataset_path)
+        print(f"Loaded {len(songs)} songs.")
 
-    # load folk songs
-    print("Loading songs...")
-    songs = load_songs_in_kern(dataset_path)
-    print(f"Loaded {len(songs)} songs.")
+        for i, song in enumerate(songs):
+            try:
+                # filter out songs that have non-acceptable durations
+                if not has_acceptable_durations(song, ACCEPTABLE_DURATIONS):
+                    continue
 
-    for i, song in enumerate(songs):
+                # transpose songs to Cmaj/Amin
+                song = transpose(song)
 
-        # filter out songs that have non-acceptable durations
-        if not has_acceptable_durations(song, ACCEPTABLE_DURATIONS):
-            continue
+                # encode songs with music time series representation
+                encoded_song = encode_song(song)
 
-        # transpose songs to Cmaj/Amin
-        song = transpose(song)
+                # save songs to text file
+                save_path = os.path.join(SAVE_DIR, str(i))
+                with open(save_path, "w") as fp:
+                    fp.write(encoded_song)
 
-        # encode songs with music time series representation
-        encoded_song = encode_song(song)
-
-        # save songs to text file
-        save_path = os.path.join(SAVE_DIR, str(i))
-        with open(save_path, "w") as fp:
-            fp.write(encoded_song)
-
-        if i % 10 == 0:
-            print(f"Song {i} out of {len(songs)} processed")
+                if i % 10 == 0:
+                    print(f"Song {i} out of {len(songs)} processed")
+            except Exception as e:
+                print('preprocess:', e)
+                continue;
+    except Exception as e:
+        print('preprocess:', e)
 
 
 def load(file_path):
@@ -192,7 +207,6 @@ def create_single_file_dataset(dataset_path, file_dataset_path, sequence_length)
     return songs
 
 
-
 def create_mapping(songs, mapping_path):
     """Creates a json file that maps the symbols in the song dataset onto integers
 
@@ -215,12 +229,64 @@ def create_mapping(songs, mapping_path):
         json.dump(mappings, fp, indent=4)
 
 
-def main():
-    preprocess(KERN_DATASET_PATH)
-    songs = create_single_file_dataset(SAVE_DIR, SINGLE_FILE_DATASET, SEQUENCE_LENGTH)
-    create_mapping(songs, MAPPING_PATH)
+def convert_songs_to_int(songs):
+    int_songs = []
+
+    # load mappings
+    with open(MAPPING_PATH, "r") as fp:
+        mappings = json.load(fp)
+
+    # transform songs string to list
+    songs = songs.split()
+
+    # map songs to int
+    for symbol in songs:
+        int_songs.append(mappings[symbol])
+
+    return int_songs
 
 
-if __name__ == "__main__":
-    main()
+def generate_training_sequences(sequence_length):
+    """Create input and output data samples for training. Each sample is a sequence.
 
+    :param sequence_length (int): Length of each sequence. With a quantisation at 16th notes, 64 notes equates to 4 bars
+
+    :return inputs (ndarray): Training inputs
+    :return targets (ndarray): Training targets
+    """
+
+    # load songs and map them to int
+    songs = load(SINGLE_FILE_DATASET)
+    int_songs = convert_songs_to_int(songs)
+
+    print(int_songs)
+
+    inputs = []
+    targets = []
+
+    # generate the training sequences
+    num_sequences = len(int_songs) - sequence_length
+    for i in range(num_sequences):
+        inputs.append(int_songs[i:i + sequence_length])
+        targets.append(int_songs[i + sequence_length])
+
+    # one-hot encode the sequences
+    vocabulary_size = get_vocabulay_size()  # len(set(int_songs))
+    # inputs size: (# of sequences, sequence length, vocabulary size)
+    inputs = keras.utils.to_categorical(inputs, num_classes=vocabulary_size)
+    targets = np.array(targets)
+
+    print(f"There are {len(inputs)} sequences.")
+
+    return inputs, targets
+
+
+def get_vocabulay_size():
+    try:
+        # load mappings
+        with open(MAPPING_PATH, "r") as fp:
+            mappings = json.load(fp)
+            return len(mappings)
+        return -1
+    except:
+        return -1
