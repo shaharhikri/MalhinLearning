@@ -58,7 +58,30 @@ async function uploadFile() {
     }
 }
 
+let genresCombobox = document.getElementById('genres');
+async function renderGenres(){
+    let res = await fetch('/compose/getgenres', {
+        method: 'GET',
+    })
+    if(res.status==200){
+        let genres = (await res.json()).genres;
+        for (n of genres) {
+            item = document.createElement('option');
+            item.value = n;
+            item.innerHTML = n;
+            genresCombobox.appendChild(item);
+        }
+    }
+    else{
+        console.log(res.status)
+        console.log(res)
+    }
+}
+renderGenres();
+
 async function compose(){
+    genre = genresCombobox.value
+    console.log('compose genre: '+genre)
     let res = await fetch('/compose/', {
         method: "POST", 
         headers: {
@@ -66,7 +89,7 @@ async function compose(){
         },
         body: JSON.stringify({
             id: myid,
-            genre : 'waltzes'
+            genre : genre
         })
       })
 
@@ -96,7 +119,7 @@ function delCookie()
     }
 }
 
-console.log('COOKIES: ',document.cookie)
+// console.log('COOKIES: ',document.cookie)
 
 let melodiesList = document.getElementById('melodiesList');
 async function renderMelodies(){

@@ -12,8 +12,6 @@ with open(MAPPING_FILE, "r") as fp:
     mappings = json.load(fp)
     MAPPING_KEYS = list(dict(mappings).keys())
 
-print('MAPPING_KEYS:',MAPPING_KEYS)
-
 
 def compose(input_filename: str ,output_filename: str , genre: str):
     try:
