@@ -2,6 +2,7 @@ from flask import Flask, request, json, make_response, jsonify
 import compose as cm
 from os.path import exists
 from os import listdir
+import re
 
 GENRES_DIR = 'trained_genres_models'
 
@@ -23,7 +24,9 @@ def lets_compose():
             res = make_response(jsonify(error='Input file doesn\'t exists'), 400)
             return res
 
-        #TODO: Add output filename format - check what you need to check
+        if not is_pathname_valid(input_filename):
+            res = make_response(jsonify(error='Input file name isn\'t valid'), 400)
+            return res
 
         # generate seed
         if cm.compose(input_filename, output_filename, genre):
@@ -38,6 +41,14 @@ def lets_compose():
         res = make_response(jsonify(error='Service inner error'), 500)
         return res
 
+def is_pathname_valid(pathname: str) -> bool:
+    root_path_optional = "([A-z0-9]:/){,1}"
+    dirs = "\/{,1}([A-z0-9-_+]+\/)*"
+    filename = "(.(?:[^<>:\"\|\?\*\n])+"
+    formatting = "(\.([A-z]+)){,1})"
+    reg = f'^{root_path_optional}{dirs}{filename}{formatting}$'
+    return True if re.search(reg, pathname) else False
+
 
 @app.route('/getgenres', methods=['GET'])
 def get_genres():
@@ -49,6 +60,7 @@ def get_genres():
     except:
         res = make_response(jsonify(error='Service inner error'), 500)
         return res
+
 
 
 if __name__ == "__main__":
