@@ -30,22 +30,3 @@ app.get("/", tokenConnectedAuthenticationMiddleware, (req, res) => {
 const server = app.listen(port, function () {
     console.log(`Listening on port ${server.address().port}`);
 });
-
-
-// //------------------raven attachments test----------------from index.js 12.3
-let ravendb = require('./src/dbUtils/common');
-// const { Console } = require('console');
-
-// async function uploadFileAsAtt(id,fileName,attachmentName){
-//     ravendb.storeAttachment(id,fileName,attachmentName);
-//     console.log('***storeAttachment:',attachmentName);
-// }
-
-async function showAttInfo(id){
-    console.log('***showAttInfo:',await ravendb.getAttachmentsInfo(id));
-    
-}
-
-async function getAttStream(id,attachmentName){
-    let s = await ravendb.getAttachment(id,attachmentName);
-}

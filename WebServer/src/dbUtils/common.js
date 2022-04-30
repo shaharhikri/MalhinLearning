@@ -68,11 +68,11 @@ async function getAttachmentsInfo(id){
     }
 }
 
-async function getAttachment(id, filename){
+async function getAttachment(id, attachmentName){
     try{
         let session = documentStore.openSession();
         // let user = await session.session.load(id);
-        const attachmentStream = await session.advanced.attachments.get(id, filename);
+        const attachmentStream = await session.advanced.attachments.get(id, attachmentName);
         return attachmentStream.data;
     }
     catch (e){

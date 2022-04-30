@@ -100,6 +100,9 @@ async function compose(){
     else if(res.status==400){
         alert('Upload file before.');
     }
+    else{
+        alert('Something went wrong.');
+    }
     //TODO: Multiple files instead of 1
 }
 

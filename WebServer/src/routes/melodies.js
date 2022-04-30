@@ -38,7 +38,7 @@ router.get("/getattachmentsnames", tokenConnectedAuthenticationMiddleware, async
             res.status(200).json(names);
         }
     }
-    catch {
+    catch(e) {
         res.status(500).send();
     }
 });

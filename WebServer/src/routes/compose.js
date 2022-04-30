@@ -16,10 +16,10 @@ router.use(bodyParser.json());
 
 router.post("/", tokenActionAuthorizationMiddleware, async (req, res) => {
     try {
-        let id = req.body.id
-        let idsuffix = id.split("/")[1];
+        let id = req.body.id                //users/1234
+        let idsuffix = id.split("/")[1];    //      1234
 
-        let myPath = path.join(uploadPath, idsuffix); // Current user upload folder 
+        let myPath = path.join(uploadPath, idsuffix); // Current user upload folder
         console.log(myPath)
         if (!fs.existsSync(myPath))
             res.json({});
@@ -39,16 +39,23 @@ router.post("/", tokenActionAuthorizationMiddleware, async (req, res) => {
                 if (inputfile && outputfile && genre) {
                     let letscompose_result = await letscompose(inputfile, outputfile, genre);
 
-                    if (letscompose_result.succeeded) {
-                        await ravendb.storeAttachment(id, outputfile, outputfile_name);
+                    let createAndStoreMelody_succeeded = letscompose_result.succeeded;
 
-                        fs.exists(outputfile, function (exists) {
-                            if (exists) {
-                                fs.unlink(outputfile);
-                            }
-                        });
+                    if (letscompose_result.succeeded) {
+                        createAndStoreMelody_succeeded = await ravendb.storeAttachment(id, outputfile, outputfile_name);
                     }
-                    res.status(letscompose_result.resStatus).json(letscompose_result.resMsg);
+                    fs.exists(outputfile, function (exists) {
+                        if (exists) {
+                            fs.unlink(outputfile);
+                        }
+                    }); // Remove output file anyway (even if the attachment storing didn't succeeded)
+
+                    if(createAndStoreMelody_succeeded){
+                        res.status(letscompose_result.resStatus).json(letscompose_result.resMsg);
+                    }
+                    else{
+                        res.status(500).json('Something went wrong with creating or storing your new melody.');
+                    }
                 }
                 else {
                     res.status(400).json({ error: 'No given file to compose.' });
