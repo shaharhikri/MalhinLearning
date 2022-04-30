@@ -1,6 +1,7 @@
 WebServer/node_modules
 WebServer/uploads
 WebServer/mockupsFiles/dbMockupAttachmentsStorage/*
+WebServer/mockupFiles/dbMockupAttachmentsStorage/*
 WebServer/.vscode
 ComposeService/.idea
 ComposeService/__pycache__
