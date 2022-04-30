@@ -3,6 +3,17 @@ let emailInput = document.getElementById('emailInput');
 let passwordInput = document.getElementById('passwordInput');
 console.log('COOKIES: ',document.cookie)
 
+function delCookie()
+{
+    var new_date = new Date()
+    new_date = new_date.toGMTString()
+    var thecookie = document.cookie.split(";")
+    for (var i = 0;i < thecookie.length;i++)
+    {
+        document.cookie = thecookie[i] + "; expires ="+ new_date
+    }
+}
+
 async function login() { 
     let data = { email: emailInput.value, password: passwordInput.value}
     return await fetch('/login', {
@@ -28,3 +39,5 @@ async function login() {
         }
     });
 }
+
+delCookie();
