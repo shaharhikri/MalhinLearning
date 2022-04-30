@@ -122,6 +122,52 @@ function delCookie()
     }
 }
 
+async function deleteFile(filename){
+    let res = await fetch(`/melodies/delete/${filename}`, {
+        method: 'DELETE',
+    })
+    if(res.status==200){
+        alert('File Deleted successfully.');
+        location.replace('/');
+    }
+}
+
+async function downloadFile(filename){
+    let res = await fetch(`/melodies/download/${filename}`, {method: 'GET'})
+    if(res.status==200){
+        let blob = await res.blob()
+        let url = window.URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();    
+        a.remove();  //afterwards we remove the element again
+    }
+}
+
+
+async function renderListenDiv(filename){
+    let listen_url = `/melodies/download/${filename}`;
+    let midiPlayer = document.getElementById(`player_${filename}`);
+    midiPlayer.setAttribute('src', listen_url);
+
+    midiPlayer.style.visibility = "visible";
+
+    document.getElementById(`load_btn_${filename}`).remove();
+
+}
+
+async function listenFile(filename){
+    renderListenDiv(filename)
+    // let res = await fetch(`/melodies/download/${filename}`, {
+    //     method: 'GET',
+    // })
+    // if(res.status==200){
+    //     //make div
+    // }
+}
+
 
 // CARDVIEW:
 // <div class="audio_row">
@@ -141,51 +187,72 @@ function delCookie()
 // let melodiesList = document.getElementById('melodiesList');
 let melodiesList = document.getElementById('scroll_audios');
 async function renderMelodies(){
-    // let res = await fetch('/melodies/getattachmentsnames', {
-    //     method: 'POST',
-    // })
-    // if(res.status==200){
-    //     let names = await res.json();
-        let names = ["test", "hello", "lorem"];
+    let res = await fetch('/melodies/getattachmentsnames', {
+        method: 'GET',
+    })
+    if(res.status==200){
+        let names = await res.json();
         for (n of names) {
             download_url = '/melodies/download/'+n;
-            delete_url = '/melodies/delete/'+n;
-            listen_url = '/melodies/listen/'+n;
+            // delete_url = '/melodies/delete/'+n;
+            listen_url = '/melodies/download/'+n;
+
             audio_row = document.createElement('div');
             audio_row.setAttribute('class', 'audio_row');
 
-            filename_mid = document.createElement('labal'); // 1
+            filename_mid = document.createElement('label'); // 1
             filename_mid.setAttribute('class', 'filename_mid');
-            filename_mid.setAttribute('for', n);
+            // filename_mid.setAttribute('for', n);
             filename_mid.innerHTML = n;
-            
-            audio_player = document.createElement('audio'); // 2
+
+            audio_player = document.createElement('midi-player'); // 2
             audio_player.setAttribute('class', 'audio_player');
-            audio_player.setAttribute('id', n);
-            audio_player.setAttribute('controls', '');
-            audio_player.setAttribute('controlslist', 'nodownload');
+            audio_player.setAttribute('id', `player_${n}`);
+            // // audio_player.setAttribute('src', listen_url);
+            // audio_player.setAttribute('src', `listenFile("${n}")`);
+            audio_player.setAttribute('sound-font', "");
+            // audio_player.setAttribute('visualizer', "#myPianoRollVisualizer");
+            audio_player.setAttribute('visualizer', "#visualizer");
+            audio_player.style.visibility = "hidden";
+
             
-            source = document.createElement('source'); // 2.1
-            source.setAttribute('src', listen_url);
-            source.setAttribute('type', 'audio/mpeg');
+            // audio_player = document.createElement('audio'); // 2
+            // audio_player.setAttribute('class', 'audio_player');
+            // audio_player.setAttribute('id', n);
+            // audio_player.setAttribute('controls', '');
+            // audio_player.setAttribute('controlslist', 'nodownload');
             
-            audio_player.appendChild(source);
-            audio_player.appendChild(document.createTextNode("Your browser does not support the audio element"));
+            // source = document.createElement('source'); // 2.1
+            // source.setAttribute('src', listen_url);
+            // source.setAttribute('type', 'application/octet-stream');
+            
+            // audio_player.appendChild(source);
+            // audio_player.appendChild(document.createTextNode("Your browser does not support the audio element"));
             
             audio_btns = document.createElement('div'); // 3
             audio_btns.setAttribute('class', 'audio_btns');
 
-            audio_download_btm = document.createElement('button'); // 3.1
-            audio_download_btm.setAttribute('class', 'audio_download_btm');
-            audio_download_btm.setAttribute('type', 'button');
-            audio_download_btm.innerHTML = 'Download';
+            audio_listen_btn = document.createElement('button'); // 3.0
+            audio_listen_btn.setAttribute('class', 'audio_listen_btn');
+            audio_listen_btn.setAttribute('type', 'button');
+            audio_listen_btn.setAttribute('id', `load_btn_${n}`);
+            audio_listen_btn.setAttribute('onclick', `listenFile("${n}")`);
+            audio_listen_btn.innerHTML = 'Load Song';
+
+            audio_download_btn = document.createElement('button'); // 3.1
+            audio_download_btn.setAttribute('class', 'audio_download_btn');
+            audio_download_btn.setAttribute('type', 'button');
+            audio_download_btn.setAttribute('onclick', `downloadFile("${n}")`);
+            audio_download_btn.innerHTML = 'Download';
 
             audio_delete_btn = document.createElement('button');  // 3.2
             audio_delete_btn.setAttribute('class', 'audio_delete_btn');
             audio_delete_btn.setAttribute('type', 'button');
+            audio_delete_btn.setAttribute('onclick', `deleteFile("${n}")`);
             audio_delete_btn.innerHTML = 'Delete';
 
-            audio_btns.appendChild(audio_download_btm);
+            audio_btns.appendChild(audio_listen_btn);
+            audio_btns.appendChild(audio_download_btn);
             audio_btns.appendChild(audio_delete_btn);
 
             audio_row.appendChild(filename_mid);
@@ -195,21 +262,12 @@ async function renderMelodies(){
 
 
             melodiesList.appendChild(audio_row);
-
-            
-
-            // item = document.createElement('li');
-            // link  = document.createElement('a');
-            // text = document.createTextNode(n);
-
-            // link.href = '/melodies/download/'+n;
-            // link.setAttribute("class", "some-class-name");
-            // link.appendChild(text);
-            // item.appendChild(link);
-            // melodiesList.appendChild(item);
         }
         console.log(melodiesList)
-    // }
+    }
 }
 
+
 renderMelodies();
+
+// console.log('COOKIES: ',document.cookie)

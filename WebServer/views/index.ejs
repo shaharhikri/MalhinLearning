@@ -40,19 +40,21 @@
         </div>
         <div id="right_cell" class="cell">
             <div id="scroll_audios">
-                <!-- <div class="audio_row">
-                    <label for="filename_audio_player" class="filename_mid">filename.mid</label>
-                    <audio id="filename_audio_player" controls controlslist="nodownload" class="audio_player">
-                        <source src="https://www.w3schools.com/html/horse.ogg" type="audio/ogg" />
-                        <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg" />
-                        Your browser does not support the audio element.
-                    </audio>
-                    <div class="audio_btns">
-                        <button type="button" id="filename_audio_download" class="audio_download_btm">Download</button>
-                        <button type="button" id="filename_audio_delete" class="audio_delete_btn">Delete</button>
-                    </div>
-                </div> -->
             </div>
+        </div>
+    </div>
+    <div class="row" id="listenRow">
+        <div class="cell" id="listenDiv">
+            <midi-visualizer
+                id="visualizer"
+                type="waterfall">
+            </midi-visualizer>
+            <!-- <midi-player id="midiPlayer"
+            src="/melodies/download/tmp_mockup_genre_30-04-2022_15-7-4-939.midi"
+            sound-font 
+            visualizer="#myStaffVisualizer"></midi-player> -->
+
+            <!-- <midi-visualizer type="staff" id="myStaffVisualizer"></midi-visualizer>  -->
         </div>
     </div>
 </body>
@@ -65,3 +67,5 @@
 <script type='text/javascript' src="/static/scripts/index_script.js"></script>
 
 <link href="/static/css/index_style.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
