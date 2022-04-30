@@ -23,7 +23,7 @@ body {
 }
 
 .navbar-items-c {
-    display: inline-block;
+    display: block;
     float: right;
 }
 

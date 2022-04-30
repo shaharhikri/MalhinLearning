@@ -152,10 +152,20 @@ async function renderListenDiv(filename){
     let midiPlayer = document.getElementById(`player_${filename}`);
     midiPlayer.setAttribute('src', listen_url);
 
-    midiPlayer.style.visibility = "visible";
-
-    document.getElementById(`load_btn_${filename}`).remove();
-
+    // midiPlayer.style.visibility = "visible";
+    // transform: rotateY(180deg)
+    // transition: transform 1s;
+    // transform-style: preserve-3d;
+    document.getElementById(`load_btn_${filename}`).style.transition = "transform 7s";
+    document.getElementById(`load_btn_${filename}`).style.transform_style = "preserve-3d";
+    document.getElementById(`load_btn_${filename}`).style.transform = "rotateY(1800deg)";
+    setTimeout(() => {  
+        document.getElementById(`load_btn_${filename}`).remove();
+        midiPlayer.style.width = "50px"; 
+        midiPlayer.style.visibility = "visible";
+    }, 7000);
+    // document.getElementById(`load_btn_${filename}`).remove();
+    document.getElementById('listenRow').style.visibility = "visible";;
 }
 
 async function listenFile(filename){
@@ -169,22 +179,6 @@ async function listenFile(filename){
 }
 
 
-// CARDVIEW:
-// <div class="audio_row">
-//     <label for="filename_audio_player" class="filename_mid">filename.mid</label>
-//     <audio id="filename_audio_player" controls controlslist="nodownload" class="audio_player">
-//         <source src="https://www.w3schools.com/html/horse.ogg" type="audio/ogg" />
-//         <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg" />
-//         Your browser does not support the audio element.
-//     </audio>
-//     <div class="audio_btns">
-//         <button type="button" class="audio_download_btm">Download</button>
-//         <button type="button" class="audio_delete_btn">Delete</button>
-//     </div>
-// </div>
-
-
-// let melodiesList = document.getElementById('melodiesList');
 let melodiesList = document.getElementById('scroll_audios');
 async function renderMelodies(){
     let res = await fetch('/melodies/getattachmentsnames', {
@@ -213,6 +207,7 @@ async function renderMelodies(){
             audio_player.setAttribute('sound-font', "");
             // audio_player.setAttribute('visualizer', "#myPianoRollVisualizer");
             audio_player.setAttribute('visualizer', "#visualizer");
+            audio_player.style.width = "0";
             audio_player.style.visibility = "hidden";
 
             
