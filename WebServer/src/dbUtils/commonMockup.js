@@ -83,9 +83,28 @@ async function getAttachment(id, attachmentName){
     }
 }
 
+async function deleteAttachment(id, attachmentName){ 
+    try{
+        let idsuffix = id.split("/")[1];    // id=users/1234  idsuffix=1234
+        user_attachments_dir = path.join(dbMockupAttachmentsStorage, idsuffix);
+        let attachment_fileName = path.join(user_attachments_dir, attachmentName);
+    
+        fs.exists(attachment_fileName, function (exists) {
+            if (exists) {
+                fs.unlink(attachment_fileName);
+            }
+        }); // Remove attachment file
+        return true;
+    }
+    catch(e){
+        return false;
+    }
+}
+
 module.exports.storeUser = storeUser;
 module.exports.findUserById = findUserById;
 module.exports.findUserByEmail = findUserByEmail;
 module.exports.storeAttachment = storeAttachment;
 module.exports.getAttachmentsInfo = getAttachmentsInfo;
 module.exports.getAttachment = getAttachment;
+module.exports.deleteAttachment = deleteAttachment;

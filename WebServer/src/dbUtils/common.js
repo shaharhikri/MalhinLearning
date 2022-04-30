@@ -81,6 +81,19 @@ async function getAttachment(id, attachmentName){
     }
 }
 
+async function deleteAttachment(id, attachmentName){ 
+    try{
+        let session = documentStore.openSession();
+        await session.advanced.attachments.delete(id, attachmentName);
+        await session.saveChanges();
+        return true;
+    }
+    catch (e){
+        console.log('common::attachmentStream - RavenException', e);
+        return false;
+    }
+}
+
 if (process.env.DB_MOCKUP === 'TRUE'){
     module.exports = require('./commonMockup');
 }
@@ -91,4 +104,5 @@ else{
     module.exports.storeAttachment = storeAttachment;
     module.exports.getAttachmentsInfo = getAttachmentsInfo;
     module.exports.getAttachment = getAttachment;
+    module.exports.deleteAttachment = deleteAttachment;
 }

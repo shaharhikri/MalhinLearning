@@ -22,6 +22,17 @@ router.get("/download/:attName", tokenConnectedAuthenticationMiddleware, async (
     }
 });
 
+//For example: DELETE http://localhost:8080/melodies/delete/input_file_waltzes_02-04-2022_19-19-27-495.midi
+router.delete("/delete/:attName", tokenConnectedAuthenticationMiddleware, async (req, res) => {
+    if(await ravendb.deleteAttachment(req.user.id, req.params.attName)){
+        res.status(200).send();
+    }
+    else{
+        res.status(404).json( { error : 'Attachment '+req.params.attName+' didnt found for this user.'} );
+    }
+});
+
+
 router.get("/getattachmentsnames", tokenConnectedAuthenticationMiddleware, async (req, res) => {
     try{
         let infoList = await ravendb.getAttachmentsInfo(req.user.id);
@@ -42,7 +53,5 @@ router.get("/getattachmentsnames", tokenConnectedAuthenticationMiddleware, async
         res.status(500).send();
     }
 });
-
-
 
 module.exports = router;
