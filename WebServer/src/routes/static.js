@@ -4,7 +4,7 @@ const staticPath = path.join(__dirname, '../static');
 
 const router = express.Router();
 
-router.get("/:dir/:file", (req, res) => {
+router.get("/:dir/:file", async (req, res) => {
     try{
         res.sendFile(staticPath + `/${req.params.dir}/${req.params.file}`);
     }
@@ -13,7 +13,7 @@ router.get("/:dir/:file", (req, res) => {
     }
 });
 
-router.get("/:file", (req, res) => {
+router.get("/:file", async (req, res) => {
     try{
         res.sendFile(staticPath + `/${req.params.file}`);
     }

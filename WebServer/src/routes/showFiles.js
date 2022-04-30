@@ -12,7 +12,7 @@ const { tokenActionAuthorizationMiddleware } = require(path.join(__dirname, '../
 const router = express.Router();
 router.use(bodyParser.json())
 
-router.post("/", tokenActionAuthorizationMiddleware, (req, res) => {
+router.post("/", tokenActionAuthorizationMiddleware, async (req, res) => {
     try{
         let id = req.body.id
         let idsuffix = id.split("/")[1];

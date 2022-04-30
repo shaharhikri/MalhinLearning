@@ -14,7 +14,7 @@ const parseToken = require(path.join(__dirname, '../services/tokenParser'));
 const router = express.Router();
 router.use(busboy({ highWaterMark: 2 * 1024 * 1024, })); // Set 2MiB buffer
 
-router.post("/", (req, res, next) => {
+router.post("/", async (req, res, next) => {
     try{
         if (req === undefined){
             res.status(400).send();

@@ -17,11 +17,11 @@ const bodyParser = require('body-parser')
 router.use(bodyParser.json())
 router.use(cookieParser());
 
-router.get('/login', tokenSignAuthenticationMiddleware, (req, res) => {
+router.get('/login', tokenSignAuthenticationMiddleware, async (req, res) => {
     res.render('login')
 })
 
-router.get('/register', tokenSignAuthenticationMiddleware, (req, res) => {
+router.get('/register', tokenSignAuthenticationMiddleware, async (req, res) => {
     res.render('register')
 })
 
