@@ -1,21 +1,60 @@
 <body>
-    <h1>Malhin Leaning</h1>
-    <div class="center">
-        <h2>NAME: <%= name%></h2>
-        <h2>File Upload:</h2>
-        <input id='filesChoice' type="file" name="fileToUpload" multiple />
-        <button type="button" onclick="uploadFile()">upload</button>
-        <h1>My File (to compose):</h1>
-        <ul id=fileList></ul>
-        
-        <label for="genres">Choose a genres:</label>
-        <select name="genres" id="genres"></select>
-
-        <button type="button" onclick="compose()">compose</button>
-        <h1>My Melodies:</h1>
-        <ul id=melodiesList></ul>
+    <div data-gjs="navbar" id="nav_bar" class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand" id="banner"></a>
+            <div id="navbar" class="navbar-burger">
+                <div class="navbar-burger-line">
+                </div>
+                <div class="navbar-burger-line">
+                </div>
+                <div class="navbar-burger-line">
+                </div>
+            </div>
+            <div data-gjs="navbar-items" class="navbar-items-c">
+                <nav data-gjs="navbar-menu" class="navbar-menu">
+                    <a href="#" id="nacbar_logout" class="navbar-menu-link" onclick="logout()">Logout</a>
+                </nav>
+            </div>
+        </div>
     </div>
-    <a href="/login" onclick="logout()">Logout</a>
+    <div id="table" class="row">
+        <div id="left_cell" class="cell">
+            <h2 id="greeting_labal">Hello, <%= name%></h2>
+            <div id="upload_container">
+                <input id="filesChoice" type="file" name="fileToUpload" />
+                <button type="button" id="upload_btn" onclick="uploadFile()">upload</button>
+            </div>
+            <div id="filename_container">
+                <h3 id="file_upload_labal">File Uploaded:&nbsp</h3>
+                <p name="fileList" id="fileList">Please upload file to continue</p>
+            </div>
+            <div id="geners_container">
+                <label for="genres" id="genres_lbl">Choose a genres:</label>
+                <select name="genres" id="genres">
+                    <!-- <option value="opt1">opt1</option>
+                        <option value="opt2">opt2</option>
+                        <option value="opt3">opt3</option> -->
+                </select>
+            </div>
+            <button type="button" id="compose_btn" onclick="compose()">compose</button>
+        </div>
+        <div id="right_cell" class="cell">
+            <div id="scroll_audios">
+                <!-- <div class="audio_row">
+                    <label for="filename_audio_player" class="filename_mid">filename.mid</label>
+                    <audio id="filename_audio_player" controls controlslist="nodownload" class="audio_player">
+                        <source src="https://www.w3schools.com/html/horse.ogg" type="audio/ogg" />
+                        <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg" />
+                        Your browser does not support the audio element.
+                    </audio>
+                    <div class="audio_btns">
+                        <button type="button" id="filename_audio_download" class="audio_download_btm">Download</button>
+                        <button type="button" id="filename_audio_delete" class="audio_delete_btn">Delete</button>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
 </body>
 
 <script>
@@ -25,73 +64,4 @@
 
 <script type='text/javascript' src="/static/scripts/index_script.js"></script>
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body{
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(120deg,#2980b9, #8e44ad);
-        height: 100vh;
-        overflow: hidden;
-    }
-
-    label, input, a {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 500;
-        font-size: 16px;
-        color: #24252A;
-        text-decoration: none;
-        align-items: center;
-        margin: 5px;
-    }
-
-    h1, h2 {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 30px 10%;
-        font-family: "Montserrat", sans-serif;
-        font-weight: 500;
-        color: #616161;
-        text-decoration: none;
-    }
-
-    .center{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 400px;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
-    }
-    .center h1{
-        text-align: center;
-        padding: 20px 0;
-        border-bottom: 1px solid silver;
-    }
-
-    .center button{
-        width: 100%;
-        border: 1px solid;
-        background: #2691d9;
-        border-radius: 25px;
-        color: #e9f4fb;
-    }
-
-    button{
-        height: 50px;
-        font-size: 18px;
-        font-weight: 700;
-        cursor: pointer;
-        outline: none;
-    }
-
-</style>
+<link href="/static/css/index_style.css" rel="stylesheet">

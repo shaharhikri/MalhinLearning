@@ -1,0 +1,28 @@
+<body>
+    <h1>Malhin Leaning</h1>
+    <div class="center">
+        <h2>NAME: <%= name%></h2>
+        <h2>File Upload:</h2>
+        <input id='filesChoice' type="file" name="fileToUpload" multiple />
+        <button type="button" onclick="uploadFile()">upload</button>
+        <h1>My File (to compose):</h1>
+        <ul id=fileList></ul>
+        
+        <label for="genres">Choose a genres:</label>
+        <select name="genres" id="genres"></select>
+
+        <button type="button" onclick="compose()">compose</button>
+        <h1>My Melodies:</h1>
+        <ul id=melodiesList></ul>
+    </div>
+    <a href="/login" onclick="logout()">Logout</a>
+</body>
+
+<script>
+    var myid = '<%= userid%>'      
+    console.log("MyId "+myid)    
+</script>
+
+<script type='text/javascript' src="/static/scripts/index_script.js"></script>
+
+<link href="/static/css/index_style.css" rel="stylesheet">
