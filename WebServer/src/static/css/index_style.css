@@ -4,8 +4,14 @@
 
 body {
     margin: 0;
-    background-color: #ffffff00;
-    background: linear-gradient(120deg, #2980b9, #8e44ad);
+    /* background-color: #ffffff00; */
+    /* background: linear-gradient(120deg, #2980b9, #8e44ad); */
+    background-image: url("/static/bg-test.jpg");
+    /* background-image: url("https://wallpapercave.com/wp/8C95UpE.jpg"); */
+    background-size: 100%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .row {
