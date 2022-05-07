@@ -3,7 +3,7 @@ const path = require('path');
 
 
 function uploadFile(readStreamFiles, filename, mimeType, allowedType, uploadPath) {
-    if (filename === '') {
+    if (!filename || filename === '') {
         console.log(`Tried to upload no file.`);
         return { succeeded: false, msg : `Tried to upload no file.`};
     } else if (mimeType != allowedType) {

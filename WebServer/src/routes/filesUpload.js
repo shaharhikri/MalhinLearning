@@ -33,6 +33,11 @@ router.post("/", async (req, res, next) => {
         });  
         req.busboy.on('field', function(key, value){
             try{
+                if(key!=='field'){
+                    res.status(400).send();
+                    return;
+                }
+
                 let id = value;
                 const ifAuthorized = () => {
                     let idsuffix = id.split("/")[1];
