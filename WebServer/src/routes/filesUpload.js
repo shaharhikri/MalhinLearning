@@ -4,6 +4,7 @@ const express = require('express');
 const busboy = require('connect-busboy'); // Middleware to handle the file upload https://github.com/mscdex/connect-busboy
 const path = require('path');
 const fs = require('fs-extra');
+const { endianness } = require('os');
 const uploadFile = require(path.join(__dirname, '../services/fileService'));
 
 const fileType = process.env.ALLOWED_TYPE;
@@ -16,23 +17,26 @@ router.use(busboy({ highWaterMark: 2 * 1024 * 1024, })); // Set 2MiB buffer
 
 router.post("/", async (req, res, next) => {
     try{
-        if (req === undefined){
+        if (!req || !req.busboy){
             res.status(400).send();
             return;
         }
+        
         const token = parseToken(req);
-        req.pipe(req.busboy); // Pipe it trough busboy   
+        if(!token){
+            res.status(401).json({ error : 'You are not authorized to perform this action.' });
+            return;
+        }
+        req.pipe(req.busboy); // Pipe it trough busboy
+        req.busboy.on('finish', function() {
+            next();
+        });  
         req.busboy.on('field', function(key, value){
             try{
                 let id = value;
                 const ifAuthorized = () => {
                     let idsuffix = id.split("/")[1];
                     let myPath = path.join(uploadPath,idsuffix);
-
-                    if(fs.existsSync(myPath))
-                        deleteFolderRecursive(myPath);
-                    if(!fs.existsSync(myPath))
-                        fs.mkdirSync(myPath);
                 
                     req.busboy.on('file', (fieldname, file, filename, x,  mimeType) => {
                         let uploadFile_res = uploadFile(file, filename, mimeType,fileType, myPath);
@@ -41,41 +45,22 @@ router.post("/", async (req, res, next) => {
                         else
                             res.status(400).json({ error : uploadFile_res.msg});
                     });
-                }
-                const ifForbidden = () => {                 
-                    next();
+                };
+                const ifForbidden = () => {  
+                    res.status(401).json({ error : 'You are not authorized to perform this action.' });
                 };
                 vaildateToken(token, id, ifAuthorized, ifForbidden);
             }
             catch{
-                console.log('ERR_INVALID_ARG_TYPE')
+                res.status(500).json({ error : "ERR_INVALID_ARG_TYPE"}); 
             }
         });
-        req.busboy.on('finish', function() {
-            next();
-        });  
     }
     catch {
-        res.status(500).send();
+        res.status(500).json({ error : "Internal Server Error"}); 
     }
 }, (req, res) => {
-    res.status(403).send();
+    
 });
-
-function deleteFolderRecursive(path) {
-    var files = [];
-    if( fs.existsSync(path) ) {
-        files = fs.readdirSync(path);
-        files.forEach(function(file,index){
-            var curPath = path + "/" + file;
-            if(fs.lstatSync(curPath).isDirectory()) { // recurse
-                deleteFolderRecursive(curPath);
-            } else { // delete file
-                fs.unlinkSync(curPath);
-            }
-        });
-        fs.rmdirSync(path);
-    }
-}
 
 module.exports = router;

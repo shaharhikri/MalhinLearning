@@ -10,7 +10,14 @@ function uploadFile(readStreamFiles, filename, mimeType, allowedType, uploadPath
         console.log(`File '${filename}' is unsupported.`);
         return { succeeded: false, msg : `File '${filename}' is unsupported. ${mimeType} ${typeof mimeType}`};
     } else {
+        
         console.log(`Upload of '${filename}' started`);
+
+        // Remove path dir content.
+        if(fs.existsSync(uploadPath))
+            deleteFolderRecursive(uploadPath);
+        if(!fs.existsSync(uploadPath))
+            fs.mkdirSync(uploadPath);
 
         // Create a write stream of the new file
         const fstream = fs.createWriteStream(path.join(uploadPath, filename));
@@ -26,5 +33,20 @@ function uploadFile(readStreamFiles, filename, mimeType, allowedType, uploadPath
     }
 }
 
+function deleteFolderRecursive(path) {
+    var files = [];
+    if( fs.existsSync(path) ) {
+        files = fs.readdirSync(path);
+        files.forEach(function(file,index){
+            var curPath = path + "/" + file;
+            if(fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+}
 
 module.exports = uploadFile;
