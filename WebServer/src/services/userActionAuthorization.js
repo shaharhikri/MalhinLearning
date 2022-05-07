@@ -9,7 +9,7 @@ const parseToken = require(path.join(__dirname, '../services/tokenParser'));
 function tokenActionAuthorizationMiddleware(req, res, next) {
     try{
         const ifAuthorized = () => { next(); };
-        const ifForbidden = () => { res.status(403).json({ error : 'You are not authorized to perform this action.' }); };
+        const ifForbidden = () => { res.status(401).json({ error : 'You are not authorized to perform this action.' }); };
         
         if(!req || !req.body){
             ifForbidden();
