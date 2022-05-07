@@ -163,9 +163,10 @@ async function renderListenDiv(filename){
         document.getElementById(`load_btn_${filename}`).remove();
         midiPlayer.style.width = "50px"; 
         midiPlayer.style.visibility = "visible";
+        document.getElementById('listenRow').style.visibility = "visible";
+        document.getElementById('visualizer').style.overflow = "hidden";
     }, 7000);
     // document.getElementById(`load_btn_${filename}`).remove();
-    document.getElementById('listenRow').style.visibility = "visible";;
 }
 
 async function listenFile(filename){

@@ -1,8 +1,21 @@
 <body>
-    <h1>Malhin Leaning</h1>
+    <div data-gjs="navbar" id="nav_bar" class="navbar">
+        <div class="navbar-container">
+            <a href="" class="navbar-brand" id="banner"></a>
+            <div id="navbar" class="navbar-burger">
+                <div class="navbar-burger-line">
+                </div>
+                <div class="navbar-burger-line">
+                </div>
+                <div class="navbar-burger-line">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <h1>Malhin Leaning</h1> -->
     <div class="center">
         <h2>Register</h2>
-        <label id="errorMessage"></label>
+        <!-- <label id="errorMessage"></label> -->
         <div class="txt_field">
             <label for="name">Name</label>
             <input type="text" id="nameInput" name="name" required>
@@ -15,11 +28,12 @@
             <label for="password">Password</label>
             <input type="password" id="passwordInput" name="password" required>
         </div>
+        <label id="errorMessage" style="color: red;"></label>
         <div>
             <button type="button" onclick="register()">Register</button>
             <br>
             <br>
-            <label>Alredy Registered?</label><a href="/login">Click Here</a>
+            <label>Already Registered?</label><a href="/login">Click Here</a>
         </div>
     </div>
     <!-- <a href="/login">Login</a> -->

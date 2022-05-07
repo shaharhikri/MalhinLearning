@@ -1,11 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-label, input, a {
+label,
+input,
+a {
     font-family: "Montserrat", sans-serif;
     font-weight: 500;
     font-size: 16px;
@@ -15,15 +18,16 @@ label, input, a {
     margin: 5px;
 }
 
-body{
+body {
     margin: 0;
     padding: 0;
-    background: linear-gradient(120deg,#2980b9, #8e44ad);
+    background: linear-gradient(120deg, #2980b9, #8e44ad);
     height: 100vh;
     overflow: hidden;
 }
 
-h1, h2 {
+h1,
+h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -34,14 +38,14 @@ h1, h2 {
     text-decoration: none;
 }
 
-h1{
+h1 {
     position: absolute;
     top: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-.center{
+.center {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -49,16 +53,17 @@ h1{
     width: 400px;
     background: white;
     border-radius: 10px;
-    box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05);
     padding: 5px;
 }
-.center h1{
+
+.center h2 {
     text-align: center;
     padding: 20px 0;
     border-bottom: 1px solid silver;
 }
 
-.txt_field input{
+.txt_field input {
     width: 98%;
     padding: 5px;
     height: 40px;
@@ -66,7 +71,8 @@ h1{
     border: none;
     background: #adadad;
 }
-.txt_field label{
+
+.txt_field label {
     top: 50%;
     left: 5px;
     color: #adadad;
@@ -76,7 +82,7 @@ h1{
     transition: .5s;
 }
 
-button{
+button {
     width: 60%;
     height: 50px;
     margin: 5px 0 3px 20%;
@@ -88,4 +94,88 @@ button{
     font-weight: 700;
     cursor: pointer;
     outline: none;
+}
+
+
+
+
+
+
+
+
+
+.navbar-items-c {
+    display: block;
+    float: right;
+}
+
+.navbar {
+    background-color: #222;
+    color: #ddd;
+    min-height: 50px;
+    width: 100%;
+}
+
+.navbar-container {
+    max-width: 950px;
+    margin: 0 auto;
+    width: 95%;
+}
+
+.navbar-container::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.navbar-brand {
+    vertical-align: top;
+    display: inline-block;
+    padding: 5px;
+    min-height: 50px;
+    min-width: 50px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.navbar-menu {
+    padding: 10px 0;
+    display: block;
+    float: right;
+    margin: 0;
+}
+
+.navbar-menu-link {
+    margin: 0;
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 15px;
+}
+
+.navbar-burger {
+    margin: 10px 0;
+    width: 45px;
+    padding: 5px 10px;
+    display: none;
+    float: right;
+    cursor: pointer;
+}
+
+.navbar-burger-line {
+    padding: 1px;
+    background-color: white;
+    margin: 5px 0;
+}
+
+
+#banner {
+    background-image: url('../logo.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: local;
+    background-size: contain;
+    margin: 5px 0 5px 0;
+    height: 100px;
+    width: 100px;
 }
