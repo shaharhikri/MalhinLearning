@@ -13,7 +13,7 @@ router.use(bodyParser.json());
 
 //For example: http://localhost:8080/melodies/download/input_file_waltzes_02-04-2022_19-19-27-495.midi
 router.get("/download/:attName", tokenActionAuthorizationMiddleware, async (req, res) => {
-    let stream = await ravendb.getAttachment(req.user.id, req.params.attName);
+    let stream = await ravendb.getAttachment(req.body.id, req.params.attName);
     if ( stream ){
         stream.pipe(res);
     }
@@ -24,7 +24,7 @@ router.get("/download/:attName", tokenActionAuthorizationMiddleware, async (req,
 
 //For example: DELETE http://localhost:8080/melodies/delete/input_file_waltzes_02-04-2022_19-19-27-495.midi
 router.delete("/delete/:attName", tokenActionAuthorizationMiddleware, async (req, res) => {
-    if(await ravendb.deleteAttachment(req.user.id, req.params.attName)){
+    if(await ravendb.deleteAttachment(req.body.id, req.params.attName)){
         res.status(200).send();
     }
     else{
@@ -33,9 +33,11 @@ router.delete("/delete/:attName", tokenActionAuthorizationMiddleware, async (req
 });
 
 
-router.get("/getattachmentsnames", tokenActionAuthorizationMiddleware, async (req, res) => {
+router.get("/getattachmentsnames", 
+tokenActionAuthorizationMiddleware, 
+async (req, res) => {
     try{
-        let infoList = await ravendb.getAttachmentsInfo(req.user.id);
+        let infoList = await ravendb.getAttachmentsInfo(req.body.id);
         if ( !infoList || !Array.isArray(infoList)) {
             res.status(404).send();
         }
