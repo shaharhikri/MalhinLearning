@@ -88,15 +88,14 @@ async function deleteAttachment(id, attachmentName){
         let idsuffix = id.split("/")[1];    // id=users/1234  idsuffix=1234
         user_attachments_dir = path.join(dbMockupAttachmentsStorage, idsuffix);
         let attachment_fileName = path.join(user_attachments_dir, attachmentName);
-    
-        let removedFlag = false;
-        fs.exists(attachment_fileName, function (exists) {
-            if (exists) {
-                fs.unlink(attachment_fileName);
-                removedFlag = true;
-            }
-        }); // Remove attachment file
-        return removedFlag;
+
+        try {
+            fs.accessSync(attachment_fileName);
+            fs.unlink(attachment_fileName);
+            return true;
+        } catch (err) {
+            return false;
+        }
     }
     catch(e){
         return false;

@@ -24,9 +24,25 @@ function tokenActionAuthorizationMiddleware(req, res, next) {
     }
 }
 
-function isAuthorized(token, userIdForAction, ifAuthorized, ifForbidden) {
+function tokenActionAuthorizationNoUserIdMiddleware(req, res, next) {
     try{
-        if(!token || !userIdForAction){
+        const ifAuthorized = () => { next(); };
+        const ifForbidden = () => { res.status(401).json({ error : 'You are not authorized to perform this action.' }); };
+        if(!req){
+            ifForbidden();
+            return;
+        }
+        const token = parseToken(req);
+        isAuthorized(token, undefined, ifAuthorized, ifForbidden, false, req);
+    }
+    catch {
+        res.status(500).send();
+    }
+}
+
+function isAuthorized(token, userIdForAction, ifAuthorized, ifForbidden, compareTokenAndUserId=true, req = undefined) {
+    try{
+        if(!token || (compareTokenAndUserId && !userIdForAction)){
             ifForbidden();
             return;
         }
@@ -38,9 +54,22 @@ function isAuthorized(token, userIdForAction, ifAuthorized, ifForbidden) {
             }
             let userId = decriptedToken;
 
-            if (userId != userIdForAction) {
-                ifForbidden();
-                return;
+            if (compareTokenAndUserId){
+                if( userId != userIdForAction) {
+                    ifForbidden();
+                    return;
+                }
+            }
+            else{
+                if ( typeof userId === 'string' && userId.split("/")[0] == "Users" ){
+                    req.body = {
+                        id : userId
+                    };
+                }
+                else {
+                    ifForbidden();
+                    return;
+                }
             }
             ifAuthorized();
         });
@@ -50,4 +79,4 @@ function isAuthorized(token, userIdForAction, ifAuthorized, ifForbidden) {
     }
 }
 
-module.exports = { tokenActionAuthorizationMiddleware: tokenActionAuthorizationMiddleware, vaildateToken: isAuthorized }
+module.exports = { tokenActionAuthorizationMiddleware: tokenActionAuthorizationMiddleware, tokenActionAuthorizationNoUserIdMiddleware: tokenActionAuthorizationNoUserIdMiddleware, vaildateToken: isAuthorized }

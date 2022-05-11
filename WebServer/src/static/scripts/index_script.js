@@ -122,12 +122,14 @@ function delCookie()
     }
 }
 
-// console.log('COOKIES: ',document.cookie)
-
 let melodiesList = document.getElementById('melodiesList');
 async function renderMelodies(){
     let res = await fetch('/melodies/getattachmentsnames', {
-        method: 'GET',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     })
     if(res.status==200){
         let names = await res.json();
@@ -135,7 +137,6 @@ async function renderMelodies(){
             item = document.createElement('li');
             link  = document.createElement('a');
             text = document.createTextNode(n);
-
             link.href = '/melodies/download/'+n;
             link.setAttribute("class", "some-class-name");
             link.appendChild(text);

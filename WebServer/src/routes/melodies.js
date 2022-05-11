@@ -4,7 +4,7 @@ dotenv.config();
 const express = require('express'); // Express Web Server
 const path = require('path');
 const ravendb = require(path.join(__dirname, '../dbUtils/common'));
-const { tokenActionAuthorizationMiddleware } = require(path.join(__dirname, '../services/userActionAuthorization'));
+const { tokenActionAuthorizationMiddleware, tokenActionAuthorizationNoUserIdMiddleware } = require(path.join(__dirname, '../services/userActionAuthorization'));
 const bodyParser = require('body-parser')
 
 const router = express.Router();
@@ -12,7 +12,7 @@ router.use(bodyParser.json());
 
 
 //For example: http://localhost:8080/melodies/download/input_file_waltzes_02-04-2022_19-19-27-495.midi
-router.get("/download/:attName", tokenActionAuthorizationMiddleware, async (req, res) => {
+router.get("/download/:attName", tokenActionAuthorizationNoUserIdMiddleware, async (req, res) => {
     let stream = await ravendb.getAttachment(req.body.id, req.params.attName);
     if ( stream ){
         stream.pipe(res);
@@ -33,7 +33,7 @@ router.delete("/delete/:attName", tokenActionAuthorizationMiddleware, async (req
 });
 
 
-router.get("/getattachmentsnames", 
+router.post("/getattachmentsnames", 
 tokenActionAuthorizationMiddleware, 
 async (req, res) => {
     try{
