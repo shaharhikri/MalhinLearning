@@ -46,8 +46,6 @@ describe("Register",function(){
     
 })
 
-
-
 describe("Login",function(){
     
     it("Should return 200 & token since all requested credentials are valid",function(done){
