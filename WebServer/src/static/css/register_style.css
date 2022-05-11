@@ -6,185 +6,110 @@
     padding: 0;
 }
 
-label,
-input,
-a {
-    font-family: "Montserrat", sans-serif;
-    font-weight: 500;
-    font-size: 16px;
-    color: #24252A;
-    text-decoration: none;
-    align-items: center;
-    margin: 5px;
-}
-
 body {
+    font-family: sans-serif;
     margin: 0;
     padding: 0;
     background: linear-gradient(120deg, #22252c, #2b3549);
     height: 100vh;
     overflow: hidden;
+    background-image: url('../background.png');
+    background-position: center;
+    background-size: cover;
+    overflow-y: auto;
 }
 
-h1,
-h2 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 10%;
-    font-family: "Montserrat", sans-serif;
+label,
+a {
     font-weight: 500;
-    color: #616161;
-    text-decoration: none;
-}
-
-h1 {
-    position: absolute;
-    top: 15%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    background: #4a2f3c;
-    border-radius: 10px;
-    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05);
-    padding: 5px;
-}
-
-.center h2 {
-    text-align: center;
-    padding: 20px 0;
-    border-bottom: 1px solid silver;
-}
-
-.txt_field input:-webkit-autofill{
-    /* -webkit-text-fill-color: white !important;
-    transition: background-color 5000s ease-in-out 0s;
-    -webkit-text-fill-font-size: 16px; */
-    transition: all 0s 50000s;
-}
-
-.txt_field input {
-    width: 98%;
-    padding: 5px;
-    height: 40px;
     font-size: 16px;
-    border: none;
-    background: #24272d;
-    color: white;
-
-}
-
-.txt_field label {
-    top: 50%;
-    left: 5px;
-    color: #adadad;
-    transform: translateY(-50%);
-    font-size: 16px;
-    pointer-events: none;
-    transition: .5s;
-}
-
-button {
-    width: 60%;
-    height: 50px;
-    border: 1px solid;
-    margin: 5px 0 3px 20%;
-    background: #22252b;
-    border-radius: 25px;
-    font-size: 18px;
-    color: #e9f4fb;
-    font-weight: 700;
-    cursor: pointer;
-    outline: none;
-}
-
-
-
-
-
-
-
-
-
-.navbar-items-c {
-    display: block;
-    float: right;
-}
-
-.navbar {
-    background-color: #2b333b;
-    color: #ddd;
-    min-height: 50px;
-    width: 100%;
-}
-
-.navbar-container {
-    max-width: 950px;
-    margin: 0 auto;
-    width: 95%;
-}
-
-.navbar-container::after {
-    content: "";
-    clear: both;
-    display: block;
-}
-
-.navbar-brand {
-    vertical-align: top;
-    display: inline-block;
-    padding: 5px;
-    min-height: 50px;
-    min-width: 50px;
-    color: inherit;
+    color: #5c5d63;
     text-decoration: none;
+    align-items: center;
+    margin: 5px;
 }
 
-.navbar-menu {
-    padding: 10px 0;
-    display: block;
-    float: right;
-    margin: 0;
+a{
+    color: blue; 
 }
-
-.navbar-menu-link {
-    margin: 0;
-    color: inherit;
-    text-decoration: none;
-    display: inline-block;
-    padding: 10px 15px;
-}
-
-.navbar-burger {
-    margin: 10px 0;
-    width: 45px;
-    padding: 5px 10px;
-    display: none;
-    float: right;
-    cursor: pointer;
-}
-
-.navbar-burger-line {
-    padding: 1px;
-    background-color: white;
-    margin: 5px 0;
-}
-
 
 #banner {
+    vertical-align: top;
+    display: inline-block;
     background-image: url('../logo.png');
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: local;
     background-size: contain;
-    margin: 5px 0 5px 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
     height: 100px;
-    width: 100px;
+    width: 100%;
+}
+
+
+.box:-webkit-autofill, 
+.box input:-webkit-autofill, 
+.box input:-webkit-autofill:focus
+{
+    transition: all 0s 50000s;
+}
+
+.box{
+    position: absolute;
+    width: 400px;
+    padding: 40px;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #191919;
+    text-align: center;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    margin-bottom: 50px;
+}
+ 
+.box{
+    color: white;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+ 
+.box input{
+    border: 0;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #3498db;
+    padding: 14px 10px;
+    width: 200px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+}
+ 
+.box input:focus{
+    width: 280px;
+    border-color: #2ecc71;
+}
+ 
+button{
+    border: 0;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #2ecc71;;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
+}
+ 
+button:hover{
+    background: #2ecc71;
 }

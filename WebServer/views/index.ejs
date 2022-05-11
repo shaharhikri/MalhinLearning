@@ -1,22 +1,8 @@
+<title>MalhinLearning</title>
+<link href="/static/css/index_style.css" rel="stylesheet">
 <body>
-    <div data-gjs="navbar" id="nav_bar" class="navbar">
-        <div class="navbar-container">
-            <a href="/" class="navbar-brand" id="banner"></a>
-            <div id="navbar" class="navbar-burger">
-                <div class="navbar-burger-line">
-                </div>
-                <div class="navbar-burger-line">
-                </div>
-                <div class="navbar-burger-line">
-                </div>
-            </div>
-            <div data-gjs="navbar-items" class="navbar-items-c">
-                <nav data-gjs="navbar-menu" class="navbar-menu">
-                    <a href="#" id="nacbar_logout" class="navbar-menu-link" onclick="logout()">Logout</a>
-                </nav>
-            </div>
-        </div>
-    </div>
+    <a href="/" class="navbar-brand" id="banner"></a>
+    <a href="#" id="nacbar_logout" class="navbar-menu-link" onclick="logout()">Logout</a>
     <div id="table" class="row">
         <div id="left_cell" class="cell">
             <h2 id="greeting_labal">Hello, <%= name%>
@@ -32,9 +18,7 @@
             <div id="geners_container">
                 <label for="genres" id="genres_lbl">Choose a genres:</label>
                 <select name="genres" id="genres">
-                    <!-- <option value="opt1">opt1</option>
-                        <option value="opt2">opt2</option>
-                        <option value="opt3">opt3</option> -->
+
                 </select>
             </div>
             <button type="button" id="compose_btn" onclick="compose()">compose</button>
@@ -61,4 +45,3 @@
 <script
     src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
 <script type='text/javascript' src="/static/scripts/index_script.js"></script>
-<link href="/static/css/index_style.css" rel="stylesheet">

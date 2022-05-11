@@ -103,7 +103,6 @@ async function compose(){
     else{
         alert('Something went wrong.');
     }
-    //TODO: Multiple files instead of 1
 }
 
 async function logout(){
@@ -123,12 +122,19 @@ function delCookie()
 }
 
 async function deleteFile(filename){
-    let res = await fetch(`/melodies/delete/${filename}`, {
-        method: 'DELETE',
-    })
-    if(res.status==200){
-        alert('File Deleted successfully.');
-        location.replace('/');
+    let answer = window.confirm(`Delete ${filename}?`);
+    if(answer){
+        let res = await fetch(`/melodies/delete/${filename}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        if(res.status==200){
+            alert('File Deleted successfully.');
+            location.replace('/');
+        }
     }
 }
 
@@ -147,85 +153,55 @@ async function downloadFile(filename){
 }
 
 
-async function renderListenDiv(filename){
+async function listenFile(filename){
     let listen_url = `/melodies/download/${filename}`;
     let midiPlayer = document.getElementById(`player_${filename}`);
     midiPlayer.setAttribute('src', listen_url);
 
-    // midiPlayer.style.visibility = "visible";
-    // transform: rotateY(180deg)
-    // transition: transform 1s;
-    // transform-style: preserve-3d;
     document.getElementById(`load_btn_${filename}`).style.transition = "transform 8s";
     document.getElementById(`load_btn_${filename}`).style.transform_style = "preserve-3d";
     document.getElementById(`load_btn_${filename}`).style.transform = "rotateY(1800deg)";
+    document.getElementById(`load_btn_${filename}`).innerHTML = "Loading...";
     setTimeout(() => {  
         document.getElementById(`load_btn_${filename}`).remove();
         midiPlayer.style.width = "50px";
         midiPlayer.style.marginLeft = "53px";
         midiPlayer.style.visibility = "visible";
         document.getElementById('listenRow').style.visibility = "visible";
-        document.getElementById('visualizer').style.overflow = "hidden";
-    }, 8000); // TODO change 7000
-    // document.getElementById(`load_btn_${filename}`).remove();
+        setTimeout(() => {
+            document.getElementById('visualizer').style.overflowX = "hidden";
+        }, 5000)
+    }, 8000);
 }
-
-async function listenFile(filename){
-    renderListenDiv(filename)
-    // let res = await fetch(`/melodies/download/${filename}`, {
-    //     method: 'GET',
-    // })
-    // if(res.status==200){
-    //     //make div
-    // }
-}
-
 
 let melodiesList = document.getElementById('scroll_audios');
 async function renderMelodies(){
     let res = await fetch('/melodies/getattachmentsnames', {
-        method: 'GET',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     })
     if(res.status==200){
         let names = await res.json();
         for (n of names) {
-            download_url = '/melodies/download/'+n;
-            // delete_url = '/melodies/delete/'+n;
-            listen_url = '/melodies/download/'+n;
-
             audio_row = document.createElement('div');
             audio_row.setAttribute('class', 'audio_row');
 
             filename_mid = document.createElement('label'); // 1
             filename_mid.setAttribute('class', 'filename_mid');
-            // filename_mid.setAttribute('for', n);
             filename_mid.innerHTML = n;
 
             audio_player = document.createElement('midi-player'); // 2
             audio_player.setAttribute('class', 'audio_player');
             audio_player.setAttribute('id', `player_${n}`);
-            // // audio_player.setAttribute('src', listen_url);
-            // audio_player.setAttribute('src', `listenFile("${n}")`);
+
             audio_player.setAttribute('sound-font', "");
-            // audio_player.setAttribute('visualizer', "#myPianoRollVisualizer");
             audio_player.setAttribute('visualizer', "#visualizer");
             audio_player.style.width = "0";
             audio_player.style.visibility = "hidden";
 
-            
-            // audio_player = document.createElement('audio'); // 2
-            // audio_player.setAttribute('class', 'audio_player');
-            // audio_player.setAttribute('id', n);
-            // audio_player.setAttribute('controls', '');
-            // audio_player.setAttribute('controlslist', 'nodownload');
-            
-            // source = document.createElement('source'); // 2.1
-            // source.setAttribute('src', listen_url);
-            // source.setAttribute('type', 'application/octet-stream');
-            
-            // audio_player.appendChild(source);
-            // audio_player.appendChild(document.createTextNode("Your browser does not support the audio element"));
-            
             audio_btns = document.createElement('div'); // 3
             audio_btns.setAttribute('class', 'audio_btns');
 
@@ -234,7 +210,7 @@ async function renderMelodies(){
             audio_listen_btn.setAttribute('type', 'button');
             audio_listen_btn.setAttribute('id', `load_btn_${n}`);
             audio_listen_btn.setAttribute('onclick', `listenFile("${n}")`);
-            audio_listen_btn.innerHTML = 'Load Song';
+            audio_listen_btn.innerHTML = 'Play';
 
             audio_download_btn = document.createElement('button'); // 3.1
             audio_download_btn.setAttribute('class', 'audio_download_btn');
