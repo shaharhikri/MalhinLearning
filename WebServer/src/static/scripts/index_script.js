@@ -156,16 +156,17 @@ async function renderListenDiv(filename){
     // transform: rotateY(180deg)
     // transition: transform 1s;
     // transform-style: preserve-3d;
-    document.getElementById(`load_btn_${filename}`).style.transition = "transform 7s";
+    document.getElementById(`load_btn_${filename}`).style.transition = "transform 8s";
     document.getElementById(`load_btn_${filename}`).style.transform_style = "preserve-3d";
     document.getElementById(`load_btn_${filename}`).style.transform = "rotateY(1800deg)";
     setTimeout(() => {  
         document.getElementById(`load_btn_${filename}`).remove();
-        midiPlayer.style.width = "50px"; 
+        midiPlayer.style.width = "50px";
+        midiPlayer.style.marginLeft = "53px";
         midiPlayer.style.visibility = "visible";
         document.getElementById('listenRow').style.visibility = "visible";
         document.getElementById('visualizer').style.overflow = "hidden";
-    }, 7000);
+    }, 8000); // TODO change 7000
     // document.getElementById(`load_btn_${filename}`).remove();
 }
 

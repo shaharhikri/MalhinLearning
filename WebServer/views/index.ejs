@@ -19,7 +19,8 @@
     </div>
     <div id="table" class="row">
         <div id="left_cell" class="cell">
-            <h2 id="greeting_labal">Hello, <%= name%></h2>
+            <h2 id="greeting_labal">Hello, <%= name%>
+            </h2>
             <div id="upload_container">
                 <input id="filesChoice" type="file" name="fileToUpload" />
                 <button type="button" id="upload_btn" onclick="uploadFile()">upload</button>
@@ -45,21 +46,19 @@
     </div>
     <div class="row" id="listenRow" style="visibility: hidden;">
         <div class="cell" id="listenDiv">
-            <midi-visualizer
-                id="visualizer"
-                type="waterfall">
+            <midi-visualizer id="visualizer" type="waterfall">
             </midi-visualizer>
         </div>
     </div>
 </body>
 
 <script>
-    var myid = '<%= userid%>'      
-    console.log("MyId "+myid)    
+    var myid = '<%= userid%>'
+    console.log("MyId " + myid)    
 </script>
 
 
-<script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
+<script
+    src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
 <script type='text/javascript' src="/static/scripts/index_script.js"></script>
 <link href="/static/css/index_style.css" rel="stylesheet">
-

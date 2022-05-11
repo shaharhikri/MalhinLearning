@@ -9,7 +9,7 @@
 body {
     margin: 0;
     padding: 0;
-    background: linear-gradient(120deg, #2980b9, #8e44ad);
+    background: linear-gradient(120deg, #22252c, #2b3549);
     height: 100vh;
     overflow: hidden;
 }
@@ -50,7 +50,7 @@ h1 {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 400px;
-    background: white;
+    background: #4a2f3c;
     border-radius: 10px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05);
     padding: 5px;
@@ -62,13 +62,21 @@ h1 {
     border-bottom: 1px solid silver;
 }
 
+.txt_field input:-webkit-autofill{
+    /* -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s; */
+    transition: all 0s 50000s;
+}
+
 .txt_field input {
     width: 98%;
     padding: 5px;
     height: 40px;
     font-size: 16px;
     border: none;
-    background: #adadad;
+    background: #24272d;
+    color: white;
+
 }
 
 .txt_field label {
@@ -86,7 +94,7 @@ button {
     height: 50px;
     border: 1px solid;
     margin: 5px 0 3px 20%;
-    background: #2691d9;
+    background: #22252b;
     border-radius: 25px;
     font-size: 18px;
     color: #e9f4fb;
@@ -106,7 +114,7 @@ button {
 }
 
 .navbar {
-    background-color: #222;
+    background-color: #2b333b;
     color: #ddd;
     min-height: 50px;
     width: 100%;

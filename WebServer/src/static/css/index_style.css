@@ -5,13 +5,14 @@
 body {
     margin: 0;
     /* background-color: #ffffff00; */
-    background: linear-gradient(120deg, #2980b9, #8e44ad);
+    background: linear-gradient(120deg, #22252c, #2b3549);
     /* background-image: url("/static/bg-test.jpg"); */
     /* background-image: url("https://wallpapercave.com/wp/8C95UpE.jpg"); */
     background-size: 100%;
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-position: center;
+    color: white;
 }
 
 .row {
@@ -34,7 +35,7 @@ body {
 }
 
 .navbar {
-    background-color: #222;
+    background-color: #2b333b;
     color: #ddd;
     min-height: 50px;
     width: 100%;
@@ -104,7 +105,8 @@ button {
     outline: none;
     width: 100px;
     border: 1px solid;
-    background: #2691d9;
+    /* background: #2691d9; */
+    background: #ca1c59;
     border-radius: 25px;
     color: #e9f4fb;
 }
@@ -117,6 +119,7 @@ button {
     border: 0.5px solid black;
     padding: 1px 1px 3px 1px;
     margin: 1px 1px 10px 1px;
+    background-color: #4a2f3c;
 }
 
 /*  */
@@ -131,40 +134,45 @@ button {
 } */
 
 .audio_player {
-    
     display: block;
     /* width: inherit; */
-    width: 50px;
+    /* width: 50px; */
     height: 40px;
-    margin: 4px;
-    margin-bottom: 0;
-  }
+    margin: 3px;
+    /* margin-left: 4px; */
+    /* margin-right: 20px; */
+}
+
 .audio_player::part(control-panel) {
-    background: #2691d9;
+    /* background: #2691d9; */
+    background: #ca1c59;
     border: 1px solid #e9f4fb;
     border-radius: 10px 10px 10px 10px;
-  }
+}
 
 .audio_player::part(play-button) {
-    color: #2691d9;
+    /* color: #2691d9; */
+    color: #ca1c59;
     border: 2px solid currentColor;
     background-color: #e9f4fb;
     border-radius: 20px;
     transition: all 0.2s;
     content: 'hello';
-  }
+}
 
 .audio_player::part(play-button):hover {
-    color: #2691d9;
+    /* color: #2691d9; */
+    color: #ca1c59;
     background-color: #e9f4fb;
     border-radius: 10px;
-  }
+}
 
 .audio_player::part(time) {
+    visibility: hidden;
     font-family: monospace;
     height: 0;
     width: 0;
-  }
+}
 
 
 /*  */
@@ -184,6 +192,7 @@ button {
     line-height: 1.8em;
     padding: 1px 0 0 5px;
     border-radius: 10px 0 0 10px;
+    color: white;
 }
 
 .audio_download_btn {
@@ -208,6 +217,7 @@ button {
     padding: 0 3px 5px 3px;
     min-height: 320px;
     max-height: 320px;
+    background-color: #272c33;
 }
 
 #right_cell {
@@ -223,7 +233,7 @@ button {
 #greeting_labal {
     padding: 10px;
     text-align: center;
-    color: #000000;
+    color: white;
     font-size: 28px;
     font-weight: 700;
     font-family: Arial, Helvetica, sans-serif;
@@ -246,28 +256,40 @@ button {
     outline: none;
     width: 100px;
     border: 1px solid;
-    background: #2691d9;
-    color: #e9f4fb;
+    /* background: #2691d9; */
+    background: #ca1c59;
+    color: white;
 }
 
 #filesChoice {
-    margin: 0 0 6px 0;
+    /* height: 50px; */
+    /* transform: translate(0%, -28%); */
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
     font-family: Arial, Helvetica, sans-serif;
-    border: 1px solid black;
-    border-radius: 10px 10px 10px 10px;
+    border: 1px solid #e9f4fb;
+    border-radius: 25px 0px 0px 25px;
+    padding: 14px;
+    /* background: #2691d9; */
+    background: #ca1c59;
 }
 
-#genres_lbl {
-    font-family: Comic Sans MS, cursive, sans-serif;
-    margin: 0 9px 0 0;
+
+#upload_btn {
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 0px 25px 25px 0px;
 }
+
 
 #file_upload_labal {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-#upload_btn {
-    font-family: Arial, Helvetica, sans-serif;
+#genres_lbl {
+    font-family: Comic Sans MS, cursive, sans-serif;
+    margin: 0 9px 0 0;
 }
 
 #fileList {
@@ -296,14 +318,14 @@ button {
     width: 100px;
 }
 
-#listenDiv{
-    border-radius:10px 10px 10px 10px;
+#listenDiv {
+    border-radius: 10px 10px 10px 10px;
     padding: 5px 5px 5px 5px;
-    border:2px solid black;
+    border: 2px solid black;
     max-width: 100%;
 }
 
-#visualizer{
+#visualizer {
     max-width: 100%;
     overflow-y: hidden;
 }
