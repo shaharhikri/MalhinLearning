@@ -80,7 +80,7 @@ async function getgenres_mockup() {
 }
 
 
-if (process.env.COMPOSE_SERVICE_MOCKUP === 'TRUE'){
+if (process.env.COMPOSE_SERVICE_MOCKUP === 'TRUE'|| process.env.TEST_MODE === 'TRUE'){
     module.exports = { letscompose: letscompose_mockup, getgenres: getgenres_mockup};
 }
 else{

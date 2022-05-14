@@ -94,7 +94,7 @@ async function deleteAttachment(id, attachmentName){
     }
 }
 
-if (process.env.DB_MOCKUP === 'TRUE'){
+if (process.env.DB_MOCKUP === 'TRUE'|| process.env.TEST_MODE === 'TRUE'){
     module.exports = require('./commonMockup');
 }
 else{

@@ -19,6 +19,17 @@ async function addStubUser(){
         hashedPassword.substring(29),
     );
     storeUser(newUser);
+
+    const salt2 = await bcrypt.genSalt();
+    const hashedPassword2 = await bcrypt.hash('123456', salt2);
+    const newUser2 = new User(
+        '456',
+        'Omer Ratsaby',
+        'omerrath@gmail.com',
+        salt2,
+        hashedPassword2.substring(29),
+    );
+    storeUser(newUser2);
 }
 addStubUser();
 
