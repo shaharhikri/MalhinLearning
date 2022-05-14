@@ -87,7 +87,14 @@ async function renderGenres() {
 }
 renderGenres();
 
+let compose_btn = document.getElementById('compose_btn');
+compose_btn.style.visibility = "visible"
+let composing_h2 = document.getElementById('composing_h2');
+composing_h2.style.visibility = "hidden"
+
 async function compose() {
+    compose_btn.style.visibility = "hidden";
+    composing_h2.style.visibility = "visible";
     genre = genresCombobox.value
     console.log('compose genre: ' + genre)
     let res = await fetch('/compose/', {
@@ -112,6 +119,9 @@ async function compose() {
     else {
         alert('Something went wrong.');
     }
+
+    compose_btn.style.visibility = "visible";
+    composing_h2.style.visibility = "hidden";
 }
 
 async function logout() {
@@ -166,6 +176,7 @@ async function listenFile(filename) {
     let midiPlayer = document.getElementById(`player_${filename}`);
     midiPlayer.setAttribute('src', listen_url);
 
+    document.getElementById(`load_btn_${filename}`).onclick = null;
     document.getElementById(`load_btn_${filename}`).style.transition = "transform 8s";
     document.getElementById(`load_btn_${filename}`).style.transform_style = "preserve-3d";
     document.getElementById(`load_btn_${filename}`).style.transform = "rotateY(1800deg)";

@@ -25,11 +25,10 @@ body {
     background-position: center center;
     background-attachment: local;
     background-size: contain;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    height: 100px;
+    margin-top: 10px;
+    margin-bottom: -40px;
+    height: 190px;
     width: 100%;
-    cursor: pointer;
 }
 
 #nacbar_logout{
@@ -75,8 +74,8 @@ button {
     outline: none;
     width: 100px;
     border: 1px solid;
-    /* background: #2691d9; */
-    background: #ca1c59;
+    /* background: #2691d9; #ca1c59 */
+    background: #b41950;
     border-radius: 25px;
     color: #e9f4fb;
 }
@@ -219,7 +218,7 @@ button {
     width: 100px;
     border: 1px solid;
     /* background: #2691d9; */
-    background: #ca1c59;
+    background: #676669;
     color: white;
 }
 
@@ -235,7 +234,7 @@ button {
     border-radius: 25px 0px 0px 25px;
     padding: 14px;
     /* background: #2691d9; */
-    background: #ca1c59;
+    background: #676669;
 }
 
 
@@ -274,6 +273,7 @@ button {
     padding: 5px 5px 5px 5px;
     border: 2px solid black;
     max-width: 100%;
+    background-color: #4b38448f;
 }
 
 #visualizer {
