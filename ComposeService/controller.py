@@ -47,7 +47,13 @@ def is_pathname_valid(pathname: str) -> bool:
     filename = "(.(?:[^<>:\"\|\?\*\n])+"
     formatting = "(\.([A-z]+)){,1})"
     reg = f'^{root_path_optional}{dirs}{filename}{formatting}$'
-    return True if re.search(reg, pathname) else False
+    try:
+        # re.search(reg, _path_norm) -> check if valid format
+        # exists(os.path.split(_path_norm)[0]) -> check if path directory exists
+        _path_norm = os.path.normpath(pathname).replace("\\", "/")
+        return re.search(reg, _path_norm) and exists(os.path.split(_path_norm)[0])
+    except:
+        return False
 
 
 @app.route('/getgenres', methods=['GET'])
