@@ -75,8 +75,10 @@ async function getAttachment(id, attachmentName){
         let idsuffix = id.split("/")[1];    // id=users/1234  idsuffix=1234
         user_attachments_dir = path.join(dbMockupAttachmentsStorage, idsuffix);
         let attachment_fileName = path.join(user_attachments_dir, attachmentName);
-    
-        return fs.createReadStream(attachment_fileName);
+        if(fs.existsSync(attachment_fileName)){
+            return fs.createReadStream(attachment_fileName);
+        }
+        return null
     }
     catch(e){
         return null;
