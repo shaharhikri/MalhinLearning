@@ -1,40 +1,41 @@
 <title>MalhinLearning</title>
 <link href="/static/css/index_style.css" rel="stylesheet">
+
 <body>
     <a class="navbar-brand" id="banner"></a>
     <a href="#" id="nacbar_logout" class="navbar-menu-link" onclick="logout()">Logout</a>
     <div id="table" class="row">
         <div id="left_cell" class="cell">
-            <h2 id="greeting_labal">Hello, <%= name%>
-            </h2>
+            <h2 id="greeting_labal">Hello, <%= name%></h2>
+            <label class="left_label_cell">Please upload "kern" score (.krn)</label>
+            <br>
+            <label class="left_label_cell" id="smaller_label">Looking for KRN's?</label>
+            <a href="http://kern.ccarh.org/" target="_blank">Click Here</a>
             <div id="upload_container">
                 <input id="filesChoice" type="file" name="fileToUpload" />
                 <button type="button" id="upload_btn" onclick="uploadFile()">upload</button>
             </div>
+            <br>
+            
             <div id="filename_container">
                 <h3 id="file_upload_labal">File Uploaded:&nbsp</h3>
                 <p name="fileList" id="fileList">Please upload file to continue</p>
             </div>
             <div id="geners_container">
                 <label for="genres" id="genres_lbl">Choose a genres:</label>
-                <select name="genres" id="genres">
-
-                </select>
+                <select name="genres" id="genres"></select>
             </div>
             <div id="composing_container">
-                <!-- <h5 id="composing_h2">composing...</button> -->
                 <button type="button" id="compose_btn" onclick="compose()">Compose</button>
             </div>
         </div>
         <div id="right_cell" class="cell">
-            <div id="scroll_audios">
-            </div>
+            <div id="scroll_audios"></div>
         </div>
     </div>
     <div class="row" id="listenRow" style="visibility: hidden;">
         <div class="cell" id="listenDiv">
-            <midi-visualizer id="visualizer" type="waterfall">
-            </midi-visualizer>
+            <midi-visualizer id="visualizer" type="waterfall"></midi-visualizer>
         </div>
     </div>
 </body>

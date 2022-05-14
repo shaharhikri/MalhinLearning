@@ -36,7 +36,7 @@ a{
 #banner {
     vertical-align: top;
     display: inline-block;
-    background-image: url('../logo.png');
+    background-image: url('../banner.png');
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: local;
