@@ -20,7 +20,7 @@ router.post("/", tokenActionAuthorizationMiddleware, async (req, res) => {
         let idsuffix = id.split("/")[1];    //      1234
 
         let myPath = path.join(uploadPath, idsuffix); // Current user upload folder
-        console.log(myPath)
+        //console.log(myPath)
         if (!fs.existsSync(myPath))
             res.json({});
         else {
@@ -51,7 +51,10 @@ router.post("/", tokenActionAuthorizationMiddleware, async (req, res) => {
                     }); // Remove output file anyway (even if the attachment storing didn't succeeded)
 
                     if(createAndStoreMelody_succeeded){
-                        res.status(letscompose_result.resStatus).json(letscompose_result.resMsg);
+                        let outputFilePath = letscompose_result.resMsg.outputfile;
+                        let outputFilePath_arr = outputFilePath.split("\\");
+                        let outputFileName = outputFilePath_arr[outputFilePath_arr.length - 1];
+                        res.status(letscompose_result.resStatus).json({ melody : outputFileName });
                     }
                     else{
                         res.status(500).json('Something went wrong with creating or storing your new melody.');
