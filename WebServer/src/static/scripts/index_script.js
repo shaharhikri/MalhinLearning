@@ -87,14 +87,23 @@ async function renderGenres() {
 }
 renderGenres();
 
-let compose_btn = document.getElementById('compose_btn');
-compose_btn.style.visibility = "visible"
-let composing_h2 = document.getElementById('composing_h2');
-composing_h2.style.visibility = "hidden"
+// let compose_btn = document.getElementById('compose_btn');
+// compose_btn.style.visibility = "visible"
+// let composing_h2 = document.getElementById('composing_h2');
+// composing_h2.style.visibility = "hidden"
+
+let composing_container = document.getElementById('composing_container');
 
 async function compose() {
-    compose_btn.style.visibility = "hidden";
-    composing_h2.style.visibility = "visible";
+    composing_container.innerHTML = "";
+    let composing_loading = document.createElement('div');
+    composing_loading.setAttribute('id', 'composing_h2');
+    composing_loading.setAttribute('class', 'loader');
+    // composing_loading.innerHTML = "composing...";
+    
+    composing_container.appendChild(composing_loading);
+
+
     genre = genresCombobox.value
     console.log('compose genre: ' + genre)
     let res = await fetch('/compose/', {
@@ -120,8 +129,14 @@ async function compose() {
         alert('Something went wrong.');
     }
 
-    compose_btn.style.visibility = "visible";
-    composing_h2.style.visibility = "hidden";
+    composing_container.innerHTML = "";
+    let composing_btn = document.createElement('button');
+    composing_btn.setAttribute('type', 'button');
+    composing_btn.setAttribute('id', 'compose_btn');
+    composing_btn.setAttribute('onclick', 'compose()');
+    composing_btn.innerHTML = "Compose";
+    
+    composing_container.appendChild(composing_btn);
 }
 
 async function logout() {
