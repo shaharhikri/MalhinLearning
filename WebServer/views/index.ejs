@@ -1,97 +1,47 @@
+<title>MalhinLearning</title>
+<link href="/static/css/index_style.css" rel="stylesheet">
 <body>
-    <h1>Malhin Leaning</h1>
-    <div class="center">
-        <h2>NAME: <%= name%></h2>
-        <h2>File Upload:</h2>
-        <input id='filesChoice' type="file" name="fileToUpload" multiple />
-        <button type="button" onclick="uploadFile()">upload</button>
-        <h1>My File (to compose):</h1>
-        <ul id=fileList></ul>
-        
-        <label for="genres">Choose a genres:</label>
-        <select name="genres" id="genres"></select>
+    <a href="/" class="navbar-brand" id="banner"></a>
+    <a href="#" id="nacbar_logout" class="navbar-menu-link" onclick="logout()">Logout</a>
+    <div id="table" class="row">
+        <div id="left_cell" class="cell">
+            <h2 id="greeting_labal">Hello, <%= name%>
+            </h2>
+            <div id="upload_container">
+                <input id="filesChoice" type="file" name="fileToUpload" />
+                <button type="button" id="upload_btn" onclick="uploadFile()">upload</button>
+            </div>
+            <div id="filename_container">
+                <h3 id="file_upload_labal">File Uploaded:&nbsp</h3>
+                <p name="fileList" id="fileList">Please upload file to continue</p>
+            </div>
+            <div id="geners_container">
+                <label for="genres" id="genres_lbl">Choose a genres:</label>
+                <select name="genres" id="genres">
 
-        <button type="button" onclick="compose()">compose</button>
-        <h1>My Melodies:</h1>
-        <ul id=melodiesList></ul>
+                </select>
+            </div>
+            <button type="button" id="compose_btn" onclick="compose()">compose</button>
+        </div>
+        <div id="right_cell" class="cell">
+            <div id="scroll_audios">
+            </div>
+        </div>
     </div>
-    <a href="/login" onclick="logout()">Logout</a>
+    <div class="row" id="listenRow" style="visibility: hidden;">
+        <div class="cell" id="listenDiv">
+            <midi-visualizer id="visualizer" type="waterfall">
+            </midi-visualizer>
+        </div>
+    </div>
 </body>
 
 <script>
-    var myid = '<%= userid%>'      
-    console.log("MyId "+myid)    
+    var myid = '<%= userid%>'
+    console.log("MyId " + myid)    
 </script>
 
+
+<script
+    src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
 <script type='text/javascript' src="/static/scripts/index_script.js"></script>
-
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body{
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(120deg,#2980b9, #8e44ad);
-        height: 100vh;
-        overflow: hidden;
-    }
-
-    label, input, a {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 500;
-        font-size: 16px;
-        color: #24252A;
-        text-decoration: none;
-        align-items: center;
-        margin: 5px;
-    }
-
-    h1, h2 {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 30px 10%;
-        font-family: "Montserrat", sans-serif;
-        font-weight: 500;
-        color: #616161;
-        text-decoration: none;
-    }
-
-    .center{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 400px;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
-    }
-    .center h1{
-        text-align: center;
-        padding: 20px 0;
-        border-bottom: 1px solid silver;
-    }
-
-    .center button{
-        width: 100%;
-        border: 1px solid;
-        background: #2691d9;
-        border-radius: 25px;
-        color: #e9f4fb;
-    }
-
-    button{
-        height: 50px;
-        font-size: 18px;
-        font-weight: 700;
-        cursor: pointer;
-        outline: none;
-    }
-
-</style>

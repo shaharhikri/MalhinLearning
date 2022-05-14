@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(120deg, #22252c, #2b3549);
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('../background.png');
+    background-position: center;
+    background-size: cover;
+}
+
+label,
+a {
+    font-weight: 500;
+    font-size: 16px;
+    color: #5c5d63;
+    text-decoration: none;
+    align-items: center;
+    margin: 5px;
+}
+
+a{
+    color: blue; 
+}
+
+
+#banner {
+    vertical-align: top;
+    display: inline-block;
+    background-image: url('../logo.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: local;
+    background-size: contain;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 100px;
+    width: 100%;
+}
+
+
+.box:-webkit-autofill, 
+.box input[type="email"]:-webkit-autofill, 
+.box input[type="password"]:-webkit-autofill,
+.box input[type="email"]:-webkit-autofill:focus, 
+.box input[type="password"]:-webkit-autofill:focus
+{
+    /* -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s; */
+    transition: all 0s 50000s;
+}
+
+.box{
+    position: absolute;
+    width: 400px;
+    padding: 40px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #191919;
+    text-align: center;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+ 
+.box{
+    color: white;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+ 
+.box input[type="email"], .box input[type="password"]{
+    border: 0;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #3498db;
+    padding: 14px 10px;
+    width: 200px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+}
+ 
+.box input[type="email"]:focus, .box input[type="password"]:focus{
+    width: 280px;
+    border-color: #2ecc71;
+}
+ 
+button{
+    border: 0;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #2ecc71;;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
+}
+ 
+button:hover{
+    background: #2ecc71;
+     
+}
