@@ -147,7 +147,7 @@ describe('Access user attachments (output files) with the wrong id', function() 
 
 describe('Delete user attachments (output files)', async function() {
    
-    await fs.copyFile(`${__dirname}/test_files/output.midi`,`../mockupFiles/dbMockupAttachmentsStorage/123/output.midi`, (err) =>{
+    await fs.copyFile(`${__dirname}/test_files/del_output.midi`,`../mockupFiles/dbMockupAttachmentsStorage/123/del_output.midi`, (err) =>{
         if(err) throw err;
     });
 
@@ -168,7 +168,7 @@ describe('Delete user attachments (output files)', async function() {
 
         assert.notEqual(token1,"");    
         await server
-        .delete("/melodies//delete/output.midi")
+        .delete("/melodies//delete/del_output.midi")
         .set('Content-Type','application/json')
         .set('Cookie',"{\"token\":\""+token1+"\"}")
         .send({id: userId})
@@ -199,6 +199,98 @@ describe('Delete user attachments (output files)', function() {
         assert.notEqual(token1,"");    
         await server
         .delete("/melodies//delete/notFound.midi")
+        .set('Content-Type','application/json')
+        .set('Cookie',"{\"token\":\""+token1+"\"}")
+        .send({id: userId})
+        .expect(404);
+      
+    });
+
+});
+
+
+describe('Download user attachments (output files)', async function() {
+
+   await fs.copyFile(`${__dirname}/test_files/output.midi`,`../mockupFiles/dbMockupAttachmentsStorage/123/output.midi`, (err) =>{
+       if(err) throw err;
+   });
+
+    it('should return status code 200 since the output file is exists in storage', async function() {
+        let token1 = "";
+        let userId ="";
+        //Test - login with with valid user+pass, get the user's outp file list.
+        await server
+            .post("/login")
+            .send({email: 'shaharhikri@gmail.com', password: '123456' })
+            .expect((res) =>{
+                let tokenObj = res.body;
+                jwt.verify(tokenObj.token, secret,(err, decriptedToken) => {
+                    userId = decriptedToken;
+                });
+            token1 = tokenObj.token;
+            });
+
+        assert.notEqual(token1,"");    
+        await server
+        .get("/melodies/download/output.midi")
+        .set('Content-Type','application/json')
+        .set('Cookie',"{\"token\":\""+token1+"\"}")
+        .send({id: userId})
+        .expect(200);
+      
+
+        fs.unlinkSync(`../mockupFiles/dbMockupAttachmentsStorage/123/output.midi`);
+    });
+
+});
+
+
+
+describe('Download user attachments (output files) with the wrong token', async function() {
+
+    await fs.copyFile(`${__dirname}/test_files/down_output.midi`,`../mockupFiles/dbMockupAttachmentsStorage/123/down_output.midi`, (err) =>{
+        if(err) throw err;
+    });
+ 
+     it('should return status code 401 since the user is not authrized to preform this action', async function() {
+        let userId ="Users/123";
+        let badToken = "KSJNDSKLDFNS131";
+ 
+         await server
+         .get("/melodies/download/output.midi")
+         .set('Content-Type','application/json')
+         .set('Cookie',"{\"token\":\""+badToken+"\"}")
+         .send({id: userId})
+         .expect(401);
+       
+ 
+         fs.unlinkSync(`../mockupFiles/dbMockupAttachmentsStorage/123/down_output.midi`);
+     });
+ 
+ });
+
+
+
+ describe('Download user attachments (output files)', function() {
+   
+    it('should return status code 404 since the requested file is not found', async function() {
+        let token1 = "";
+        let userId ="";
+        //Test - login with with valid user+pass, get the user's outp file list.
+        await server
+            .post("/login")
+            .send({email: 'shaharhikri@gmail.com', password: '123456' })
+            .expect((res) =>{
+                let tokenObj = res.body;
+                jwt.verify(tokenObj.token, secret,(err, decriptedToken) => {
+                    userId = decriptedToken;
+                });
+            token1 = tokenObj.token;
+            });
+
+        assert.notEqual(token1,"");    
+        await server
+        .get("/melodies/download/notFound.midi")
         .set('Content-Type','application/json')
         .set('Cookie',"{\"token\":\""+token1+"\"}")
         .send({id: userId})

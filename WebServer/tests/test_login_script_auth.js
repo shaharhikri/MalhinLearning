@@ -54,35 +54,3 @@ describe('when login', function() {
 
 });
 
-
-
-// function deleteFolderRecursive(path) {
-//     var files = [];
-//     if( fs.existsSync(path) ) {
-//         files = fs.readdirSync(path);
-//         files.forEach(function(file,index){
-//             var curPath = path + "/" + file;
-//             if(fs.lstatSync(curPath).isDirectory()) { // recurse
-//                 deleteFolderRecursive(curPath);
-//             } else { // delete file
-//                 fs.unlinkSync(curPath);
-//             }
-//         });
-//         fs.rmdirSync(path);
-//     }
-// }
-
-//     // if(fs.existsSync(userPath))
-//     //     deleteFolderRecursive(userPath);
-
-//     // if(!fs.existsSync(userPath))
-//     //     fs.mkdirSync(userPath);
-
-//     // let fileList = [];
-
-//     // for (let index = 1; index <= 3; index++) {
-//     //     fileList.push(index +'.txt');
-//     //     fs.writeFile(userPath+index+'.txt','omer',function(err){
-//     //         if (err) throw err;
-//     //     });
-//     // }
