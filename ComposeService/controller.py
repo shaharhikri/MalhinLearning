@@ -1,8 +1,7 @@
 from flask import Flask, request, json, make_response, jsonify
 import compose as cm
-from os.path import exists
+from os.path import exists, normpath, split
 from os import listdir
-import re
 
 GENRES_DIR = 'trained_genres_models'
 
@@ -24,7 +23,7 @@ def lets_compose():
             res = make_response(jsonify(error='Input file doesn\'t exists'), 400)
             return res
 
-        if not is_pathname_valid(input_filename):
+        if not is_pathname_valid(output_filename, 'midi'):
             res = make_response(jsonify(error='Input file name isn\'t valid'), 400)
             return res
 
@@ -41,19 +40,21 @@ def lets_compose():
         res = make_response(jsonify(error='Service inner error'), 500)
         return res
 
-def is_pathname_valid(pathname: str) -> bool:
-    root_path_optional = "([A-z0-9]:/){,1}"
-    dirs = "\/{,1}([A-z0-9-_+]+\/)*"
-    filename = "(.(?:[^<>:\"\|\?\*\n])+"
-    formatting = "(\.([A-z]+)){,1})"
-    reg = f'^{root_path_optional}{dirs}{filename}{formatting}$'
-    try:
-        # re.search(reg, _path_norm) -> check if valid format
-        # exists(os.path.split(_path_norm)[0]) -> check if path directory exists
-        _path_norm = os.path.normpath(pathname).replace("\\", "/")
-        return re.search(reg, _path_norm) and exists(os.path.split(_path_norm)[0])
-    except:
+def is_pathname_valid(pathname: str, file_type: str) -> bool:
+    filename_norm = normpath(pathname.replace("/", "\\"))
+    filename_norm_splitted = split(filename_norm)
+    path = filename_norm_splitted[0]
+    if not exists(path):
         return False
+
+    filename = filename_norm_splitted[1]
+    not_allowed_chars = [ '/', '\\', ':', '*', '?', '\"', '<', '>', '|' ]
+    for c in not_allowed_chars:
+        if filename.__contains__(c):
+            return False
+
+    filename_splited_by_dot = filename.split('.')
+    return len(filename_splited_by_dot)>=2 and filename_splited_by_dot[-1]==file_type
 
 
 @app.route('/getgenres', methods=['GET'])
