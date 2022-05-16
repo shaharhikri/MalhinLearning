@@ -45,7 +45,7 @@ async function findUserById(id){
 }
 
 async function findUserByEmail(email){
-    return users.find(u => u.email === email)
+    return users.find(u => u.email === email.toLowerCase())
 }
 
 // attachments funcs

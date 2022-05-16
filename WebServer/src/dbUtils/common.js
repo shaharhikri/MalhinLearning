@@ -32,7 +32,7 @@ async function findUserById(id){
 async function findUserByEmail(email){
     try{
         let session = documentStore.openSession();
-        let users = await session.query(User).whereEquals('email', email).all(); 
+        let users = await session.query(User).whereEquals('email', email.toLowerCase()).all(); 
         return users[0];
     }
     catch (e){
