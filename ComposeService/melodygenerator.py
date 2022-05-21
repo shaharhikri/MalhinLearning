@@ -2,7 +2,7 @@ import json
 import numpy as np
 import tensorflow.keras as keras
 import music21 as m21
-from preprocess import SEQUENCE_LENGTH, MAPPING_PATH
+from preprocess import SEQUENCE_LENGTH
 
 ####### omer's remove  warnings#######
 import tensorflow as tf
