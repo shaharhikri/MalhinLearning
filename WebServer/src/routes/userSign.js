@@ -85,8 +85,13 @@ router.post('/register', async (req, res) => {
             salt,
             hashedPassword.substring(29),
         );
-        await ravendb.storeUser(newUser);
-        return res.status(200).json({ succeeded: 'succeeded' });
+        let stored = await ravendb.storeUser(newUser);
+        if(!stored){
+            return res.status(500).send();
+        }
+        else{
+            return res.status(200).json({ succeeded: 'succeeded' });
+        }
     }
     catch {
         res.status(500).send();

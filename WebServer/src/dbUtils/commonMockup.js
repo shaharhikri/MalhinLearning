@@ -35,9 +35,15 @@ addStubUser();
 
 //-------Function to export:--------
 
-function storeUser(userEntity){
-    userEntity.id = 'Users/'+userEntity.id;
-    users.push(userEntity);
+async function storeUser(userEntity){
+    try{
+        userEntity.id = 'Users/'+userEntity.id;
+        users.push(userEntity);
+        return true;
+    }
+    catch(e){
+        return false;
+    }
 }
 
 async function findUserById(id){

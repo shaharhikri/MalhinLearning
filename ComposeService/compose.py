@@ -6,7 +6,7 @@ from os.path import exists
 import json
 
 SEED_DEFAULT_LEN = 20
-MAPPING_FILE = './common_mapping.json' #'trained_genres_models/' + genre + '_mapping.json'
+MAPPING_FILE = './common_mapping.json'
 MAPPING_KEYS = None
 with open(MAPPING_FILE, "r") as fp:
     mappings = json.load(fp)

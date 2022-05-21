@@ -86,11 +86,3 @@ if (process.env.COMPOSE_SERVICE_MOCKUP === 'TRUE'|| process.env.TEST_MODE === 'T
 else{
     module.exports = { letscompose: letscompose, getgenres: getgenres};
 }
-
-// async function f(){
-//     let g = await getgenres();
-//     console.log('*getgenres: '+ JSON.stringify(g.resMsg));
-// }
-
-// f();
-// console.log(getgenres_url)

@@ -36,14 +36,14 @@ async function register() {
     }).then((jsonObject) => {
         console.log('jsonObject ',jsonObject)
         if(jsonObject.error){
-            console.log('error register!',jsonObject)
+            // console.log('error register!',jsonObject)
             errorMessage.innerHTML = jsonObject.error;
         }
         else if(jsonObject.succeeded){
-            console.log('register succeeded!',jsonObject)
+            // console.log('register succeeded!',jsonObject)
             location.replace('/');
         }  
     });
 }
 
-console.log('COOKIES: ',document.cookie)
+// console.log('COOKIES: ',document.cookie)

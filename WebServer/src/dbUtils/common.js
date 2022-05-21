@@ -5,16 +5,17 @@ const path = require('path');
 const documentStore = require(path.join(__dirname, './documentStore'));
 const { User } = require('./modelClasses');
 
-function storeUser(userEntity){
+async function storeUser(userEntity){
     try{
         let session = documentStore.openSession();
         session.store(userEntity, 'Users/'+userEntity.id);
-        session.saveChanges();
+        await session.saveChanges();
+        return true;
     }
     catch (e){
         console.log('common::storeUser - RavenException');
+        return false;
     }
-
 }
 
 async function findUserById(id){

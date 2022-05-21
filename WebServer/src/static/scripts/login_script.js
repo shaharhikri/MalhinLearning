@@ -34,7 +34,7 @@ async function login() {
             location.replace('/');
         }
         else if(jsonObject.error){
-            console.log('error login!',jsonObject)
+            // console.log('error login!',jsonObject)
             errorMessage.innerHTML = jsonObject.error;
         }
     });

@@ -105,7 +105,7 @@ async function compose() {
 
 
     genre = genresCombobox.value
-    console.log('compose genre: ' + genre)
+    // console.log('compose genre: ' + genre)
     let res = await fetch('/compose/', {
         method: "POST",
         headers: {
@@ -223,7 +223,7 @@ async function renderMelodies() {
         for (n of names) {
             addMelodyUpdateUI(n);
         }
-        console.log(melodiesList)
+        // console.log(melodiesList)
     }
 }
 
