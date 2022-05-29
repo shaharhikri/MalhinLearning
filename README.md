@@ -7,7 +7,7 @@ The system includes Register&Login subsystem that implements JWT method.
 Users' info and outputs are stored in DB and can be downloaded from the website (client).
 The system includes NodeJS and Python unit tests.<br/><br/>
 
-## Run Instructiones (on windows)
+## Run Instructions (for windows)
 
 ### DB run:
 - Go to ./Provisioning/
