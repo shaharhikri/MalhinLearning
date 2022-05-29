@@ -1,4 +1,4 @@
-# Run Instructiones (on windows)
+## Run Instructiones (on windows)
 
 ### DB run:
 - Go to ./Provisioning/
