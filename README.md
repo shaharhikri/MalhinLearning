@@ -1,3 +1,12 @@
+# Malhin Learning (Web Melodies Generator)
+In this project, we have established a system for creating melodies and tunes.
+The aim of the project is to allow its users to create musical pieces based on the musical input and selections they provide.
+The input files type is krn and the output files type is midi.
+The generated melody (output file) is based on the input file and the genre chosen by the user.
+The system includes Register&Login subsystem that implements JWT method.
+Users' info and outputs are stored in DB and can be downloaded from the website (client).
+The system includes NodeJS and Python unit tests.<br/><br/>
+
 ## Run Instructiones (on windows)
 
 ### DB run:
@@ -24,6 +33,7 @@
 - Run the server by the cmd/powershell command ```npm start```.
 ![alt text](/README/WebServerConsole.png?raw=true)
 <br/>Dont close the console (cmd/powershell window).<br/><br/>
+
 
 
 In the end you'll have 3 cmd/poweshell windows - 1 for each component in the project.
