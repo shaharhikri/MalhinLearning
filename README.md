@@ -8,6 +8,7 @@ Users' info and outputs are stored in DB and can be downloaded from the website 
 The system includes NodeJS and Python unit tests.<br/><br/>
 
 ## Run Instructions (for windows)
+Instructions for ruuning local in windows machine.
 
 ### DB run:
 - Go to ./Provisioning/
